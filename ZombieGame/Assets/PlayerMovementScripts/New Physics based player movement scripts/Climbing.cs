@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class Climbing : MonoBehaviour
+public class Climbing : NetworkBehaviour
 {
     [Header("References")]
     public Transform orientation;
@@ -42,15 +44,31 @@ public class Climbing : MonoBehaviour
     public float exitWallTime;
     private float exitWallTimer;
 
+    private InputSystem_Actions controls;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
+
         lg = GetComponent<LedgeGrabbing>();
+        playerMoveScript = GetComponent<NewPlayerMovement>();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (!IsOwner) return;
+
+        //controls.Disable();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner || !IsSpawned) return;
+
         WallCheck();
         StateMachine();
 

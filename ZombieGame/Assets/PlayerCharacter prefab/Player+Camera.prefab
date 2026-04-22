@@ -189,12 +189,12 @@ Transform:
   m_GameObject: {fileID: 1546546612054187246}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.40577, y: -0.20582, z: -4.9702}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1.1583332, y: 0, z: -4.6416664}
+  m_LocalScale: {x: 0.83333325, y: 0.5555556, z: 0.83333325}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6516195223141905660}
-  m_Father: {fileID: 6108495926646679911}
+  m_Father: {fileID: 1834289164882328395}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3843606477085635666
 MonoBehaviour:
@@ -219,6 +219,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1834289164882328395}
   - component: {fileID: 4156521815689456636}
+  - component: {fileID: 1204784731654972057}
   - component: {fileID: 666162847845302043}
   - component: {fileID: 8410248641744634163}
   - component: {fileID: 6074928560133535175}
@@ -227,6 +228,8 @@ GameObject:
   - component: {fileID: 2623072289954901892}
   - component: {fileID: 1897739640972053883}
   - component: {fileID: 5920543833501863228}
+  - component: {fileID: 8249897259501430093}
+  - component: {fileID: 8811561152528972149}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -250,6 +253,7 @@ Transform:
   - {fileID: 311408423476569785}
   - {fileID: 4698025278777467874}
   - {fileID: 2450290321145610369}
+  - {fileID: 6470323074472921025}
   m_Father: {fileID: 6108495926646679911}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &4156521815689456636
@@ -279,6 +283,31 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!114 &1204784731654972057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849044032392991788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 2155812192
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &666162847845302043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,6 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1176e5b02019df74a8fe02c115b3030c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewPlayerMovement
+  ShowTopMostFoldoutHeaderGroup: 1
   walkSpeed: 9
   sprintSpeed: 15
   slideSpeed: 20
@@ -317,7 +347,7 @@ MonoBehaviour:
   playerHeight: 4
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   grounded: 0
   maxSlopeAngle: 45
   climbingScript: {fileID: 6146193622914518425}
@@ -364,10 +394,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WallRunning
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 0
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 0
   wallRunForce: 200
   wallJumpUpForce: 7
   wallJumpSideForce: 12
@@ -397,7 +427,7 @@ MonoBehaviour:
   lg: {fileID: 0}
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 0
   climbSpeed: 10
   maxClimbTime: 0.75
   climbJumpUpForce: 14
@@ -435,7 +465,7 @@ MonoBehaviour:
   ledgeSphereCastRadius: 0.5
   whatIsLedge:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
   exitingLedge: 0
   exitLedgeTime: 0.2
 --- !u!114 &2623072289954901892
@@ -454,7 +484,7 @@ MonoBehaviour:
   gunTip: {fileID: 1075194823254266569}
   whatIsGrappleable:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 0
   lr: {fileID: 5960953436607622463}
   maxGrappleDistance: 25
   grappleDelayTime: 0.25
@@ -515,6 +545,69 @@ MonoBehaviour:
   m_DefaultActionMap: 
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &8249897259501430093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849044032392991788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da52bf8bbc1de48cfb221a6ff30f7972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Multiplayer.Center.NetcodeForGameObjectsExample::Unity.Multiplayer.Center.NetcodeForGameObjectsExample.ClientNetworkTransform
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 0
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
+--- !u!114 &8811561152528972149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849044032392991788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkRigidbody
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 1
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
 --- !u!1 &5706323495958319037
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +699,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6470323074472921025}
   - {fileID: 1834289164882328395}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

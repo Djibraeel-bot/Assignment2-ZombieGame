@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class Grappling : MonoBehaviour
+public class Grappling : NetworkBehaviour
 {
     [Header("References")]
     private NewPlayerMovement playerMoveScript;
@@ -25,10 +27,21 @@ public class Grappling : MonoBehaviour
 
     private bool grappling;
 
+    private InputSystem_Actions controls;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public override void OnNetworkSpawn()
     {
-        playerMoveScript = GetComponent<NewPlayerMovement>();
+        if (!IsOwner) return;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (!IsOwner) return;
+
+        //controls.Disable();
     }
 
     // Update is called once per frame

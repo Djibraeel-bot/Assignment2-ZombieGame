@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class NewPlayerMovement : MonoBehaviour
+public class NewPlayerMovement : NetworkBehaviour
 {
     [Header("Movement")]
     private float moveSpeed;
@@ -135,8 +136,10 @@ public class NewPlayerMovement : MonoBehaviour
     private void OnDisable() => controls.Disable();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
+
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
@@ -145,9 +148,19 @@ public class NewPlayerMovement : MonoBehaviour
         startYScale = transform.localScale.y;
     }
 
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (!IsOwner) return;
+
+        controls.Disable();
+    }
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner || !IsSpawned) return;
+
         //ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
@@ -164,12 +177,16 @@ public class NewPlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //if (!IsOwner || !IsSpawned) return;
+
         MovePlayer();
         BetterJump();
     }
 
     private void MyInput()
     {
+        //if (!IsOwner || !IsSpawned) return;
+
         horizontalInput = moveInput.x;
         verticalInput = moveInput.y;
 
@@ -210,6 +227,8 @@ public class NewPlayerMovement : MonoBehaviour
 
     private void StateHandler()
     {
+        //if (!IsOwner || !IsSpawned) return;
+
         if (state == MovementState.dashing) return;
 
         //mode-freeze
@@ -350,6 +369,8 @@ public class NewPlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
+        //if (!IsOwner || !IsSpawned) return;
+
         if (activeGrapple) return;
 
         if (restricted) return;
@@ -382,6 +403,8 @@ public class NewPlayerMovement : MonoBehaviour
 
     private void SpeedControl()
     {
+        if (!IsOwner || !IsSpawned) return;
+
         if (activeGrapple) return;
 
         //limit speed on slope

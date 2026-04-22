@@ -1,8 +1,9 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class PlayerCam : MonoBehaviour
+public class PlayerCam : NetworkBehaviour
 {
     //public Camera cam;
     [SerializeField] private NewPlayerMovement playerMovement;
@@ -36,14 +37,27 @@ public class PlayerCam : MonoBehaviour
     private Tween fovTween;
     private Tween tiltTween;
 
+    private InputSystem_Actions controls;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         cam = GetComponent<Camera>();
         startLocalPos = transform.localPosition;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (!IsOwner) return;
+
+        //controls.Disable();
     }
 
     // Update is called once per frame

@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class Dashing : MonoBehaviour
+public class Dashing : NetworkBehaviour
 {
     [Header("References")]
     public Transform orientation;
@@ -41,10 +43,20 @@ public class Dashing : MonoBehaviour
     //}
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
+
         rb = GetComponent<Rigidbody>();
-        playerMoveScript = GetComponent<NewPlayerMovement>();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (!IsOwner) return;
+
+        //controls.Disable();
     }
 
     // Update is called once per frame
