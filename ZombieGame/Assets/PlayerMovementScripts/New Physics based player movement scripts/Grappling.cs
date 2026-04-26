@@ -5,7 +5,7 @@ using Unity.Netcode;
 public class Grappling : NetworkBehaviour
 {
     [Header("References")]
-    private NewPlayerMovement playerMoveScript;
+    [SerializeField] private NewPlayerMovement playerMoveScript;
     public Transform cam;
     public Transform gunTip;
     public LayerMask whatIsGrappleable;
@@ -33,6 +33,8 @@ public class Grappling : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
+
+        playerMoveScript = GetComponent<NewPlayerMovement>();
     }
 
     public override void OnNetworkDespawn()
@@ -47,6 +49,8 @@ public class Grappling : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner || !IsSpawned) return;
+
         if (playerMoveScript.grapplePressed) StartGrapple();
 
         if (grapplingCdTimer > 0)
@@ -55,6 +59,8 @@ public class Grappling : NetworkBehaviour
 
     private void LateUpdate()
     {
+        //if (!IsOwner || !IsSpawned) return;
+
         if (grappling)
             lr.SetPosition(0, gunTip.position);
     }

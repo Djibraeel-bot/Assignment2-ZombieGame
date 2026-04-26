@@ -45,6 +45,8 @@ public class LedgeGrabbing : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
+
+        playerMoveScript = GetComponent<NewPlayerMovement>();
     }
 
     public override void OnNetworkDespawn()
@@ -59,6 +61,8 @@ public class LedgeGrabbing : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner || !IsSpawned) return;
+
         LedgeDetection();
         SubStateMachine();
     }

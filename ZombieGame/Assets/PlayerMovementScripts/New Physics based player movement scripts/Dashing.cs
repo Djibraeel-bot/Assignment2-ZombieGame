@@ -8,7 +8,7 @@ public class Dashing : NetworkBehaviour
     public Transform orientation;
     public Transform playerCam;
     private Rigidbody rb;
-    private NewPlayerMovement playerMoveScript;
+    [SerializeField] private NewPlayerMovement playerMoveScript;
 
     [Header("Dashing")]
     public float dashForce;
@@ -48,6 +48,7 @@ public class Dashing : NetworkBehaviour
         if (!IsOwner) return;
 
         rb = GetComponent<Rigidbody>();
+        playerMoveScript = GetComponent<NewPlayerMovement>();
     }
 
     public override void OnNetworkDespawn()
@@ -62,6 +63,8 @@ public class Dashing : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner || !IsSpawned) return;
+
         //if (Input.GetKeyDown(dashKey))
         //    Dash();
 
