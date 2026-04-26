@@ -8,8 +8,8 @@ using Unity.Netcode;
 public class Menu : MonoBehaviour
 {
   [Header("UI Elements")]
-    [SerializeField] private TMP_InputField ipInput;
-    [SerializeField] private TMP_InputField portInput;
+    [SerializeField] public TMP_InputField ipInput;
+    [SerializeField] public TMP_InputField portInput;
     [Header("Defaults")]
     [SerializeField] private string defaultIP = "127.0.0.1";
     [SerializeField] private ushort defaultPort = 7777;
@@ -22,7 +22,7 @@ public class Menu : MonoBehaviour
         //set connection data first
         networkManager.StartHost(); 
         // host loads game scene for host
-        networkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+        networkManager.SceneManager.LoadScene("NGO_Setup", LoadSceneMode.Single);
     }
 
     public void JoinGame()
