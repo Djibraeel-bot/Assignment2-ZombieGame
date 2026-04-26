@@ -5,6 +5,11 @@ using Unity.Netcode;
 
 public class NewPlayerMovement : NetworkBehaviour
 {
+    //public Camera playerCamera;
+    //public AudioListener audioListener;
+
+    public GameObject gameHolder; // assign in inspector
+
     [Header("Movement")]
     private float moveSpeed;
     public float walkSpeed;
@@ -47,6 +52,7 @@ public class NewPlayerMovement : NetworkBehaviour
 
     public Vector2 MoveInput => moveInput;
     public InputSystem_Actions Controls => controls;
+    //private InputAction Move;
     public Vector2 LookInput { get; private set; }
 
     public Vector2 moveInput;
@@ -55,6 +61,7 @@ public class NewPlayerMovement : NetworkBehaviour
     public bool crouchHeld;
     public bool dashPressed;
     public bool grapplePressed;
+    public bool attackPressed;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -115,7 +122,7 @@ public class NewPlayerMovement : NetworkBehaviour
         controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
 
-        controls.Player.Jump.started += ctx => jumpPressed = true;
+        controls.Player.Jump.performed += ctx => jumpPressed = true;
 
         controls.Player.Sprint.performed += ctx => sprintHeld = true;
         controls.Player.Sprint.canceled += ctx => sprintHeld = false;
@@ -130,15 +137,29 @@ public class NewPlayerMovement : NetworkBehaviour
         controls.Player.Look.canceled += ctx => LookInput = Vector2.zero;
 
         controls.Player.Grapple.started += ctx => grapplePressed = true;
+
+        controls.Player.Attack.started += ctx => attackPressed = true;
     }
 
-    private void OnEnable() => controls.Enable();
-    private void OnDisable() => controls.Disable();
+    //private void OnEnable() => controls.Enable();
+    //private void OnDisable() => controls.Disable();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override void OnNetworkSpawn()
     {
+        if (IsOwner)
+        {
+            controls.Enable();
+            gameHolder.SetActive(true); 
+        }
+        else
+        {
+            gameHolder.SetActive(false);
+        }
+
         if (!IsOwner) return;
+
+        controls.Enable();
 
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
@@ -185,6 +206,8 @@ public class NewPlayerMovement : NetworkBehaviour
 
     private void MyInput()
     {
+        if (!IsOwner) return;
+
         //if (!IsOwner || !IsSpawned) return;
 
         horizontalInput = moveInput.x;
@@ -228,6 +251,7 @@ public class NewPlayerMovement : NetworkBehaviour
     private void StateHandler()
     {
         //if (!IsOwner || !IsSpawned) return;
+        //if (!IsOwner) return;
 
         if (state == MovementState.dashing) return;
 
@@ -403,8 +427,6 @@ public class NewPlayerMovement : NetworkBehaviour
 
     private void SpeedControl()
     {
-        if (!IsOwner || !IsSpawned) return;
-
         if (activeGrapple) return;
 
         //limit speed on slope

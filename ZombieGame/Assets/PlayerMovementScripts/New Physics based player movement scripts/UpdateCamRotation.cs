@@ -2,11 +2,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
 
-public class MoveCamera : NetworkBehaviour
+public class UpdateCamRotation : NetworkBehaviour
 {
-    [SerializeField] private Transform cameraPosition;
-
-    private InputSystem_Actions controls;
+    public Transform cameraTransform;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override void OnNetworkSpawn()
@@ -28,6 +26,8 @@ public class MoveCamera : NetworkBehaviour
     {
         if (!IsOwner || !IsSpawned) return;
 
-        transform.position = cameraPosition.position;
+        //transform.rotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
+
+        transform.rotation = cameraTransform.rotation;
     }
 }

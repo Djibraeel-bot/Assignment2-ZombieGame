@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class WallRunning : MonoBehaviour
+public class WallRunning : NetworkBehaviour
 {
     [Header("Wallrunning")]
     public LayerMask whatIsWall;
@@ -46,16 +48,29 @@ public class WallRunning : MonoBehaviour
     private Rigidbody rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
+
         rb = GetComponent<Rigidbody>();
         playerMoveScript = GetComponent<NewPlayerMovement>();
         lg = GetComponent<LedgeGrabbing>();
     }
 
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (!IsOwner) return;
+
+        //controls.Disable();
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner || !IsSpawned) return;
+
         CheckForWall();
         StateMachine();
     }
