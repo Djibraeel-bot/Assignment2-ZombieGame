@@ -26,8 +26,8 @@ public class UpdateCamRotation : NetworkBehaviour
     {
         if (!IsOwner || !IsSpawned) return;
 
-        //transform.rotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
+        transform.rotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
 
-        transform.rotation = cameraTransform.rotation;
+        //transform.rotation = cameraTransform.rotation;
     }
 }
