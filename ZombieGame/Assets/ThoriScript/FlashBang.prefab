@@ -104,7 +104,6 @@ GameObject:
   - component: {fileID: 6442898485963053898}
   - component: {fileID: 7968306638095520002}
   - component: {fileID: -3160095908134434535}
-  - component: {fileID: 9004421886206044141}
   - component: {fileID: 4387397417853379494}
   - component: {fileID: 5997014415165201764}
   m_Layer: 0
@@ -262,19 +261,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &9004421886206044141
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1827801871663013180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b245cc6321fc77040b572a0e36602884, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThrowableState
-  projectileScript: {fileID: 0}
 --- !u!114 &4387397417853379494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,7 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlashbangEffect
   volume: {fileID: 824671083346135722, guid: 7b62c5fec0722fe4daaa21708c442c9c, type: 3}
-  alphaController: {fileID: 0}
+  alphaController: {fileID: 4312032162147441458, guid: 801ac564c020637419540c570ae09681, type: 3}
 --- !u!114 &5997014415165201764
 MonoBehaviour:
   m_ObjectHideFlags: 0
