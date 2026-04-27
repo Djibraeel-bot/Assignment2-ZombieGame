@@ -1,13 +1,19 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
-      
+using Unity.Netcode;
+using Unity.Netcode.Components;
 
-public class Combat : MonoBehaviour
+
+public class Combat : NetworkBehaviour
 {
-     [Header("References")]
+    [Header("References")]
     public Animator animator;
-    public CharacterController controller;
+    public NetworkAnimator netAnimator;
+
+    private NewPlayerMovement playerMoveScript;
+
+    //public CharacterController controller;
 
     [Header("Settings")]
     public float attackMoveLockTime = 0.5f;
@@ -24,26 +30,42 @@ public class Combat : MonoBehaviour
         inputActions = new CombatInput();
     }
 
-    private void OnEnable()
+    public override void OnNetworkSpawn()
     {
-        inputActions.Enable();
+        if (!IsOwner) return;
 
-        inputActions.Player.Attack.started += OnAttackStarted;
-        inputActions.Player.Attack.canceled += OnAttackCanceled;
+        playerMoveScript = GetComponent<NewPlayerMovement>();
+    }
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
 
-        inputActions.Player.Shield.performed += OnShield;
-        inputActions.Player.Throw.performed += OnThrow;
+        if (!IsOwner) return;
+
+        //controls.Disable();
     }
 
-    private void OnDisable()
-    {
-        inputActions.Disable();
-    }
+
+    //private void OnEnable()
+    //{
+    //    inputActions.Enable();
+
+    //    inputActions.Player.Attack.started += OnAttackStarted;
+    //    inputActions.Player.Attack.canceled += OnAttackCanceled;
+
+    //    inputActions.Player.Shield.performed += OnShield;
+    //    inputActions.Player.Throw.performed += OnThrow;
+    //}
+
+    //private void OnDisable()
+    //{
+    //    inputActions.Disable();
+    //}
 
     private void Update()
     {
         // Count hold time
-        if (inputActions.Player.Attack.IsPressed())
+        if (playerMoveScript.attackPressed)
         {
             attackHeldTime += Time.deltaTime;
         }
@@ -55,27 +77,27 @@ public class Combat : MonoBehaviour
 
     private void OnAttackStarted(InputAction.CallbackContext ctx)
     {
+        if (!IsOwner) return;
+
         attackHeldTime = 0f;
     }
 
     private void OnAttackCanceled(InputAction.CallbackContext ctx)
     {
+        if (!IsOwner) return;
+
         if (isAttacking) return;
 
         if (attackHeldTime >= heavyHoldTime)
-        {
             HeavyAttack();
-        }
         else
-        {
             Jab();
-        }
     }
 
     private void Jab()
     {
         isAttacking = true;
-        animator.SetTrigger("Jab");
+        netAnimator.SetTrigger("Attack");
 
         StartCoroutine(AttackLock(attackMoveLockTime));
     }
@@ -83,7 +105,7 @@ public class Combat : MonoBehaviour
     private void HeavyAttack()
     {
         isAttacking = true;
-        animator.SetTrigger("Heavy");
+        netAnimator.SetTrigger("Heavy");
 
         StartCoroutine(AttackLock(attackMoveLockTime + 0.3f));
     }
@@ -93,7 +115,7 @@ public class Combat : MonoBehaviour
         if (isAttacking) return;
 
         isAttacking = true;
-        animator.SetTrigger("ShieldBash");
+        netAnimator.SetTrigger("ShieldBash");
 
         StartCoroutine(AttackLock(0.6f));
     }
@@ -103,7 +125,7 @@ public class Combat : MonoBehaviour
         if (isAttacking) return;
 
         isAttacking = true;
-        animator.SetTrigger("Throw");
+        netAnimator.SetTrigger("Throw");
 
         StartCoroutine(AttackLock(0.7f));
     }

@@ -5,6 +5,7 @@ using Unity.Netcode;
 public class UpdateCamRotation : NetworkBehaviour
 {
     public Transform cameraTransform;
+    public Transform playerObj;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override void OnNetworkSpawn()
@@ -26,7 +27,7 @@ public class UpdateCamRotation : NetworkBehaviour
     {
         if (!IsOwner || !IsSpawned) return;
 
-        transform.rotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
+        playerObj.transform.rotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
 
         //transform.rotation = cameraTransform.rotation;
     }

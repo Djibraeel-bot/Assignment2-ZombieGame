@@ -88,7 +88,13 @@ public class NewPlayerMovement : NetworkBehaviour
 
     public MovementState state;
 
-    [SerializeField] private Animator netAnimator;
+    [SerializeField] private NetworkAnimator netAnimator;
+    [SerializeField] private Animator locAnimator;
+
+
+    private bool wasGrounded;
+    private float airTime;
+
     public enum MovementState
     {
         freeze,
@@ -189,6 +195,7 @@ public class NewPlayerMovement : NetworkBehaviour
 
         //ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        //netAnimator.SetBool("isGrounded", grounded);
 
         MyInput();
         SpeedControl();
@@ -341,10 +348,13 @@ public class NewPlayerMovement : NetworkBehaviour
         else if(!crouchHeld && !sprintHeld)
         {
             //Mode-Walking
-            if (grounded)
+            if (grounded && moveInput.magnitude > 0.1f)
             {
                 state = MovementState.walking;
-                desiredMoveSpeed = walkSpeed;
+            }
+            else if (grounded)
+            {
+                state = MovementState.freeze; // or idle
             }
 
             //Mode-Air
@@ -564,6 +574,44 @@ public class NewPlayerMovement : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        netAnimator.SetInteger("animState", (int)state);
+        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+
+        locAnimator.SetFloat("Speed", flatVel.magnitude);
+        locAnimator.SetBool("isSprinting", state == MovementState.sprinting);
+        locAnimator.SetBool("isGrounded", grounded);
+
+        // Detect leaving ground → Jump
+        if (!grounded && wasGrounded)
+        {
+            netAnimator.SetTrigger("TriggerJump");
+            airTime = 0f;
+        }
+
+        // Track airtime
+        if (!grounded)
+        {
+            airTime += Time.deltaTime;
+
+            // After a short delay, consider it falling
+            if (airTime > 0.2f)
+            {
+                locAnimator.SetBool("isFalling", true);
+                //netAnimator.SetBool("isFalling", true);
+            }
+        }
+
+        // Detect landing
+        if (grounded && !wasGrounded)
+        {
+            netAnimator.SetTrigger("TriggerLand");
+            locAnimator.SetBool("isFalling", false);
+        }
+
+        wasGrounded = grounded;
+
+        if (attackPressed)
+        {
+            locAnimator.SetTrigger("TriggerAttack");
+        }
     }
 }

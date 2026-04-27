@@ -607,13 +607,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3256039337131122196}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.148, y: 0.075, z: 0.058}
+  m_LocalScale: {x: 0.8959235, y: 1.3438852, z: 0.8959233}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 614075909128907306}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 7929769865300417679}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &4065542011502664195
 GameObject:
   m_ObjectHideFlags: 0
@@ -1238,6 +1238,7 @@ GameObject:
   - component: {fileID: 5970229331740793420}
   - component: {fileID: 5804245557752475347}
   - component: {fileID: 2646564541013805004}
+  - component: {fileID: 6577811027289021327}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1260,7 +1261,6 @@ Transform:
   m_Children:
   - {fileID: 2316360505817466356}
   - {fileID: 80182246518717875}
-  - {fileID: 5149726746472516489}
   - {fileID: 4402598290265628984}
   - {fileID: 4258015361010448053}
   m_Father: {fileID: 0}
@@ -1364,7 +1364,8 @@ MonoBehaviour:
   climbingScript: {fileID: 6650068188245089514}
   orientation: {fileID: 80182246518717875}
   state: 0
-  netAnimator: {fileID: 0}
+  netAnimator: {fileID: 6575942385865845558}
+  locAnimator: {fileID: 7929769865290904431}
   sliding: 0
   wallrunning: 0
   crouching: 0
@@ -1627,6 +1628,21 @@ MonoBehaviour:
   UseRigidBodyForMotion: 1
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &6577811027289021327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8721861722129242637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3ed386490d9d4d46b82d8c2d4a87571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpdateCamRotation
+  ShowTopMostFoldoutHeaderGroup: 1
+  cameraTransform: {fileID: 1358507838921596165}
+  playerObj: {fileID: 2316360505817466356}
 --- !u!1 &8962309484959702973
 GameObject:
   m_ObjectHideFlags: 0
@@ -1777,19 +1793,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8969114
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.4422104
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1797,7 +1813,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -52.49
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1807,9 +1823,16 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: ddb765a89b45db14d9cdc2d9ff0ca796, type: 2}
+    - target: {fileID: 1125501422111972014, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 400000, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5149726746472516489}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       insertIndex: -1
@@ -1841,14 +1864,78 @@ MonoBehaviour:
   NetworkAnimatorExpanded: 0
   AuthorityMode: 1
   m_Animator: {fileID: 7929769865290904431}
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 2081823275
+    DestinationState: 125937960
+    TransitionDuration: 0
+    TriggerNameHash: -934412885
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 2081823275
+    DestinationState: 1080829965
+    TransitionDuration: 0.25
+    TriggerNameHash: 1019525540
+    TransitionIndex: 4
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 765711723
+    DestinationState: 125937960
+    TransitionDuration: 0
+    TriggerNameHash: -934412885
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 1533177906
+    DestinationState: 137525990
+    TransitionDuration: 0
+    TriggerNameHash: -939643291
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -399748991
+    DestinationState: 125937960
+    TransitionDuration: 0
+    TriggerNameHash: -934412885
+    TransitionIndex: 1
   AnimatorParameterEntries:
     ParameterEntries:
-    - name: animState
-      NameHash: 1715743888
+    - name: Speed
+      NameHash: -823668238
       Synchronize: 1
-      ParameterType: 3
+      ParameterType: 1
+    - name: isGrounded
+      NameHash: 1360771445
+      Synchronize: 1
+      ParameterType: 4
+    - name: isSprinting
+      NameHash: 1125312739
+      Synchronize: 1
+      ParameterType: 4
+    - name: isFalling
+      NameHash: -1829127916
+      Synchronize: 1
+      ParameterType: 4
+    - name: TriggerJump
+      NameHash: -934412885
+      Synchronize: 1
+      ParameterType: 9
+    - name: TriggerLand
+      NameHash: -939643291
+      Synchronize: 1
+      ParameterType: 9
+    - name: TriggerAttack
+      NameHash: 1019525540
+      Synchronize: 1
+      ParameterType: 9
   AnimatorParametersExpanded: 0
+--- !u!4 &7929769865300417679 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
+  m_PrefabInstance: {fileID: 7929769865300280847}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7929769865300417769 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
