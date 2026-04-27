@@ -14,15 +14,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 527645472547488185, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 231.91916
       objectReference: {fileID: 0}
     - target: {fileID: 527645472547488185, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -105.8
       objectReference: {fileID: 0}
     - target: {fileID: 527645472547488185, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -27
       objectReference: {fileID: 0}
     - target: {fileID: 527645472547488185, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
       propertyPath: m_LocalRotation.w
@@ -52,12 +52,147 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 683142439466073998, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: UseRigidBodyForMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 683142439466073998, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: AutoUpdateKinematicState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 683142439466073998, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: AutoSetKinematicOnDespawn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2414818698424411669, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: m_Height
+      value: 2.124762
+      objectReference: {fileID: 0}
+    - target: {fileID: 2414818698424411669, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: m_Center.y
+      value: 0.055444792
+      objectReference: {fileID: 0}
+    - target: {fileID: 2414818698424411669, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4002467467495005549, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3987546137
       objectReference: {fileID: 0}
+    - target: {fileID: 4002467467495005549, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4002467467495005549, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3987546137
+      objectReference: {fileID: 0}
+    - target: {fileID: 8103489155072296455, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: agent
+      value: 
+      objectReference: {fileID: 461673193591519360}
+    - target: {fileID: 8103489155072296455, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: detectionRange
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8103489155072296455, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 8103489155072296455, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: groundCheckDistance
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8408204962026374009, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.98
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 17697398868721479, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 461673193591519360}
+    - targetCorrespondingSourceObject: {fileID: 1803253288757921774, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3632233055588401595}
   m_SourcePrefab: {fileID: 100100000, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+--- !u!95 &517422053543943579 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7090019551773156194, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+  m_PrefabInstance: {fileID: 7298804106522787577}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7310556171007902142 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 17697398868721479, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+  m_PrefabInstance: {fileID: 7298804106522787577}
+  m_PrefabAsset: {fileID: 0}
+--- !u!195 &461673193591519360
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7310556171007902142}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.49
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2.11
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!1 &8956814022226442519 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1803253288757921774, guid: b4c7372e26bef23438e827bcf8ac31bf, type: 3}
+  m_PrefabInstance: {fileID: 7298804106522787577}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3632233055588401595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8956814022226442519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 517422053543943579}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: isWalking
+      NameHash: -830007593
+      Synchronize: 1
+      ParameterType: 4
+    - name: isRunning
+      NameHash: 1239866031
+      Synchronize: 1
+      ParameterType: 4
+    - name: isAttacking
+      NameHash: 973584577
+      Synchronize: 1
+      ParameterType: 4
+    - name: Die
+      NameHash: 20298039
+      Synchronize: 1
+      ParameterType: 9
+    - name: isFalling
+      NameHash: -1829127916
+      Synchronize: 1
+      ParameterType: 4
+  AnimatorParametersExpanded: 0
