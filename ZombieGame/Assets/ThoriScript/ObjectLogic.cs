@@ -1,158 +1,144 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using Unity.Netcode;
 
-public class ObjectLogic : NetworkBehaviour
+public class ObjectLogic : MonoBehaviour
 {
-    [System.Serializable]
-    public class ThrowableItem
+    public GameObject player;
+    public Transform holdPos;
+    //if you copy from below this point, you are legally required to like the video
+    public float throwForce = 500f; //force at which the object is thrown at
+    public float pickUpRange = 5f; //how far the player can pickup the object from
+    private float rotationSensitivity = 1f; //how fast/slow the object is rotated in relation to mouse movement
+    private GameObject heldObj; //object which we pick up
+    private Rigidbody heldObjRb; //rigidbody of object we pick up
+    private bool canDrop = true; //this is needed so we don't throw/drop object when rotating the object
+    private int LayerNumber; //layer index
+    public CameraLook cameraLook;
+
+    //Reference to script which includes mouse movement of player (looking around)
+    //we want to disable the player looking around when rotating the object
+    //example below 
+    //MouseLookScript mouseLookScript;
+    void Start()
     {
-        public string itemName;
-        public GameObject throwablePrefab;
-        public GameObject uiSlot;
-        public int currentAmount;
-        public int maxAmount;
+        LayerNumber = LayerMask.NameToLayer("holdLayer"); //if your holdLayer is named differently make sure to change this ""
+
+        cameraLook = player.GetComponent<CameraLook>();
     }
-
-    [Header("References")]
-    public Transform cam;
-    public Transform attackPoint;
-    public TextMeshProUGUI ammoText;
-
-    [Header("Throwables")]
-    public ThrowableItem[] throwables;
-    public int selectedIndex = 0;
-
-    [Header("Throwing")]
-    public float throwCooldown = 0.5f;
-    public float throwForce = 15f;
-    public float throwUpwardForce = 5f;
-
-    private bool readyToThrow = true;
-
-    private void Start()
+    void Update()
     {
-        UpdateUI();
-    }
-
-    private void Update()
-    {
-        HandleSelection();
-
-        if (Input.GetKeyDown(KeyCode.L) && readyToThrow)
+        if (Input.GetKeyDown(KeyCode.E)) //change E to whichever key you want to press to pick up
         {
-            Throw();
-        }
-    }
-
-    void HandleSelection()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SelectThrowable(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SelectThrowable(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SelectThrowable(2);
-        if (Input.GetKeyDown(KeyCode.Alpha4)) SelectThrowable(3);
-    }
-
-    void SelectThrowable(int index)
-    {
-        if (index >= 0 && index < throwables.Length)
-        {
-            selectedIndex = index;
-            UpdateUI();
-        }
-    }
-
-    void Throw()
-    {
-        ThrowableItem current = throwables[selectedIndex];
-
-        if (current.currentAmount <= 0) return;
-
-        readyToThrow = false;
-
-        GameObject projectile = Instantiate(current.throwablePrefab, attackPoint.position, cam.rotation);
-
-        ThrowableState state = projectile.GetComponent<ThrowableState>();
-        if (state != null)
-        {
-            state.SetAsThrown();
-        }
-        
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        
-        Vector3 forceDirection = cam.forward;
-
-        RaycastHit hit;
-        if (Physics.Raycast(cam.position, cam.forward, out hit, 500f))
-        {
-            forceDirection = (hit.point - attackPoint.position).normalized;
-        }
-
-        Vector3 forceToAdd = forceDirection * throwForce + transform.up * throwUpwardForce;
-
-        rb.AddForce(forceToAdd, ForceMode.Impulse);
-        rb.AddTorque(Random.insideUnitSphere * 10f, ForceMode.Impulse);
-
-        current.currentAmount--;
-        throwables[selectedIndex] = current;
-
-        UpdateUI();
-        Invoke(nameof(ResetThrow), throwCooldown);
-    }
-
-    void ResetThrow()
-    {
-        readyToThrow = true;
-    }
-
-    public void AddThrowable(int index, int amount = 1)
-    {
-        Debug.Log("AddThrowable called");
-
-        if (throwables == null)
-        {
-            Debug.LogError("Throwables array is NULL");
-            return;
-        }
-
-        Debug.Log("Throwables Length: " + throwables.Length);
-
-        if (index < 0 || index >= throwables.Length)
-        {
-            Debug.LogError("Invalid throwable index: " + index);
-            return;
-        }
-
-        Debug.Log("Before Add -> " + throwables[index].itemName + ": " + throwables[index].currentAmount);
-
-        throwables[index].currentAmount += amount;
-        throwables[index].currentAmount = Mathf.Clamp(
-            throwables[index].currentAmount,
-            0,
-            throwables[index].maxAmount
-        );
-
-        Debug.Log("After Add -> " + throwables[index].itemName + ": " + throwables[index].currentAmount);
-
-        UpdateUI();
-    }
-
-    void UpdateUI()
-    {
-        for (int i = 0; i < throwables.Length; i++)
-        {
-            if (throwables[i].uiSlot != null)
+            if (heldObj == null) //if currently not holding anything
             {
-                throwables[i].uiSlot.SetActive(throwables[i].currentAmount > 0);
+                //perform raycast to check if player is looking at object within pickuprange
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickUpRange))
+                {
+                    //make sure pickup tag is attached
+                    if (hit.transform.gameObject.tag == "canPickUp")
+                    {
+                        //pass in object hit into the PickUpObject function
+                        PickUpObject(hit.transform.gameObject);
+                    }
+                }
+            }
+            else
+            {
+                if(canDrop == true)
+                {
+                    StopClipping(); //prevents object from clipping through walls
+                    DropObject();
+                }
             }
         }
-
-        if (ammoText != null)
+        if (heldObj != null) //if player is holding object
         {
-            ThrowableItem current = throwables[selectedIndex];
-            ammoText.text = current.itemName + ": " + current.currentAmount;
+            MoveObject(); //keep object position at holdPos
+            RotateObject();
+            if (Input.GetKeyDown(KeyCode.Mouse0) && canDrop == true) //Mous0 (leftclick) is used to throw, change this if you want another button to be used)
+            {
+                StopClipping();
+                ThrowObject();
+            }
+
+        }
+    }
+    void PickUpObject(GameObject pickUpObj)
+    {
+        if (pickUpObj.GetComponent<Rigidbody>()) //make sure the object has a RigidBody
+        {
+            heldObj = pickUpObj; //assign heldObj to the object that was hit by the raycast (no longer == null)
+            heldObjRb = pickUpObj.GetComponent<Rigidbody>(); //assign Rigidbody
+            heldObjRb.isKinematic = true;
+            heldObjRb.transform.parent = holdPos.transform; //parent object to holdposition
+            heldObj.layer = LayerNumber; //change the object layer to the holdLayer
+            //make sure object doesnt collide with player, it can cause weird bugs
+            Physics.IgnoreCollision(heldObj.GetComponent<Collider>(), player.GetComponent<Collider>(), true);
+        }
+    }
+    void DropObject()
+    {
+        //re-enable collision with player
+        Physics.IgnoreCollision(heldObj.GetComponent<Collider>(), player.GetComponent<Collider>(), false);
+        heldObj.layer = 0; //object assigned back to default layer
+        heldObjRb.isKinematic = false;
+        heldObj.transform.parent = null; //unparent object
+        heldObj = null; //undefine game object
+    }
+    void MoveObject()
+    {
+        //keep object position the same as the holdPosition position
+        heldObj.transform.position = holdPos.transform.position;
+    }
+    void RotateObject()
+    {
+        if (Input.GetKey(KeyCode.R))//hold R key to rotate, change this to whatever key you want
+        {
+            canDrop = false; //make sure throwing can't occur during rotating
+
+            //disable player being able to look around
+            //mouseLookScript.verticalSensitivity = 0f;
+            //mouseLookScript.lateralSensitivity = 0f;
+
+            float XaxisRotation = Input.GetAxis("Mouse X") * rotationSensitivity;
+            float YaxisRotation = Input.GetAxis("Mouse Y") * rotationSensitivity;
+            //rotate the object depending on mouse X-Y Axis
+            heldObj.transform.Rotate(Vector3.down, XaxisRotation);
+            heldObj.transform.Rotate(Vector3.right, YaxisRotation);
+        }
+        else
+        {
+            //re-enable player being able to look around
+            //mouseLookScript.verticalSensitivity = originalvalue;
+            //mouseLookScript.lateralSensitivity = originalvalue;
+            canDrop = true;
+        }
+    }
+    void ThrowObject()
+    {
+        //same as drop function, but add force to object before undefining it
+        Physics.IgnoreCollision(heldObj.GetComponent<Collider>(), player.GetComponent<Collider>(), false);
+        heldObj.layer = 0;
+        heldObjRb.isKinematic = false;
+        heldObj.transform.parent = null;
+        heldObjRb.AddForce(transform.forward * throwForce);
+        heldObj = null;
+    }
+    void StopClipping() //function only called when dropping/throwing
+    {
+        var clipRange = Vector3.Distance(heldObj.transform.position, transform.position); //distance from holdPos to the camera
+        //have to use RaycastAll as object blocks raycast in center screen
+        //RaycastAll returns array of all colliders hit within the cliprange
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(transform.position, transform.TransformDirection(Vector3.forward), clipRange);
+        //if the array length is greater than 1, meaning it has hit more than just the object we are carrying
+        if (hits.Length > 1)
+        {
+            //change object position to camera position 
+            heldObj.transform.position = transform.position + new Vector3(0f, -0.5f, 0f); //offset slightly downward to stop object dropping above player 
+            //if your player is small, change the -0.5f to a smaller number (in magnitude) ie: -0.1f
         }
     }
 }

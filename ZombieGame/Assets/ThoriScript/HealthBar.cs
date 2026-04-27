@@ -27,9 +27,9 @@ public class HealthBar: MonoBehaviour
             easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, health, lerpSpeed);
     }
 
-    public void TakeDamage(float damage)   
+    public void TakeDamage(float damage)   // ✅ Now public
     {
-        health = Mathf.Max(health - damage, 0f);  
+        health = Mathf.Max(health - damage, 0f);  // ✅ Clamps at 0, no negative health
 
         if (health <= 0f)
         {
