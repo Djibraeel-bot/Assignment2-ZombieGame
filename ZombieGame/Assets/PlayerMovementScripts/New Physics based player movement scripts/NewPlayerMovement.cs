@@ -62,7 +62,9 @@ public class NewPlayerMovement : NetworkBehaviour
     public bool crouchHeld;
     public bool dashPressed;
     public bool grapplePressed;
-    public bool attackPressed;
+
+    private bool attackTriggered;
+    public bool AttackTriggered => attackTriggered;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -147,7 +149,10 @@ public class NewPlayerMovement : NetworkBehaviour
 
         controls.Player.Grapple.started += ctx => grapplePressed = true;
 
-        controls.Player.Attack.started += ctx => attackPressed = true;
+        controls.Player.Attack.performed += ctx =>
+        {
+            attackTriggered = true;
+        };
     }
 
     //private void OnEnable() => controls.Enable();
@@ -213,6 +218,8 @@ public class NewPlayerMovement : NetworkBehaviour
         //    netAnimator.SetInteger("animState", 1);
         //}
         UpdateAnimator();
+
+        attackTriggered = false;
     }
 
     private void FixedUpdate()
@@ -262,6 +269,8 @@ public class NewPlayerMovement : NetworkBehaviour
         }
 
         jumpPressed = false;
+
+        //attackPressed = false;
     }
 
     bool keepMomentum;
@@ -609,9 +618,9 @@ public class NewPlayerMovement : NetworkBehaviour
 
         wasGrounded = grounded;
 
-        if (attackPressed)
-        {
-            locAnimator.SetTrigger("TriggerAttack");
-        }
+        //if (attackPressed)
+        //{
+        //    locAnimator.SetTrigger("TriggerAttack");
+        //}
     }
 }

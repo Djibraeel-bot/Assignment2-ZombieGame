@@ -16,10 +16,11 @@ public class SimpleAttack : NetworkBehaviour
     private bool canAttack = true;
 
     [SerializeField] private CombatInput controls;
+    private NewPlayerMovement playerMove;
 
     private void Awake()
     {
-        controls = new CombatInput();
+        //controls = new CombatInput();
     }
 
     public override void OnNetworkSpawn()
@@ -27,7 +28,8 @@ public class SimpleAttack : NetworkBehaviour
         if (IsOwner)
         {
             controls.Enable();
-            controls.Player.Attack.performed += OnAttack;
+            //controls.Player.Attack.performed += OnAttack;
+            playerMove = GetComponent<NewPlayerMovement>();
         }
     }
 
@@ -35,22 +37,36 @@ public class SimpleAttack : NetworkBehaviour
     {
         if (IsOwner)
         {
-            controls.Player.Attack.performed -= OnAttack;
+            //controls.Player.Attack.performed -= OnAttack;
             controls.Disable();
         }
     }
 
-    private void OnAttack(InputAction.CallbackContext ctx)
+    private void Update()
     {
         if (!IsOwner) return;
-        if (!canAttack) return;
 
-        Attack();
+        if (playerMove.AttackTriggered && canAttack)
+        {
+            Attack();
+        }
     }
+
+    //private void OnAttack(InputAction.CallbackContext ctx)
+    //{
+    //    if (!IsOwner) return;
+    //    if (!canAttack) return;
+
+    //    Debug.Log("ATTACK INPUT FIRED");
+
+    //    Attack();
+    //}
 
     private void Attack()
     {
         canAttack = false;
+
+        Debug.Log("ATTACK FUNCTION CALLED");
 
         // Networked animation trigger
         netAnimator.SetTrigger("TriggerAttack");

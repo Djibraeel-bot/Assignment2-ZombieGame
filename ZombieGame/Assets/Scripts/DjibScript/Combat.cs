@@ -65,10 +65,10 @@ public class Combat : NetworkBehaviour
     private void Update()
     {
         // Count hold time
-        if (playerMoveScript.attackPressed)
-        {
-            attackHeldTime += Time.deltaTime;
-        }
+        //if (playerMoveScript.attackPressed)
+        //{
+        //    attackHeldTime += Time.deltaTime;
+        //}
     }
 
     // ======================

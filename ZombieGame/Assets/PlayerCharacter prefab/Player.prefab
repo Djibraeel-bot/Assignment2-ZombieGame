@@ -108,7 +108,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4258015361010448053
 Transform:
   m_ObjectHideFlags: 0
@@ -117,12 +117,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1068358094462881419}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.2, z: 0.73}
-  m_LocalScale: {x: 1.8350832, y: 1.2233889, z: 1.8350832}
+  m_LocalRotation: {x: -0, y: 0.4422104, z: -0, w: 0.8969114}
+  m_LocalPosition: {x: 0.01, y: 1.01, z: 2.18}
+  m_LocalScale: {x: 1.6440942, y: 1.6440942, z: 1.6440942}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 614075909128907306}
+  m_Father: {fileID: 7929769865300417769}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2593740459211765782
 MeshFilter:
@@ -399,7 +399,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1078151799253389348
 Transform:
   m_ObjectHideFlags: 0
@@ -499,7 +499,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cb26acb58f170474b8a2615ca05f21f0, type: 2}
+  - {fileID: 2100000, guid: 8f38cb643cab4e14a9082fe434b1478d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -607,13 +607,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3256039337131122196}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.148, y: 0.075, z: 0.058}
+  m_LocalRotation: {x: -0.6695603, y: 0.6695612, z: 0.22735077, w: 0.22735107}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.8959235, y: 1.3438852, z: 0.8959233}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7929769865300417679}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4065542011502664195
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,6 +1239,7 @@ GameObject:
   - component: {fileID: 5804245557752475347}
   - component: {fileID: 2646564541013805004}
   - component: {fileID: 6577811027289021327}
+  - component: {fileID: 7240759505982389685}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1262,7 +1263,6 @@ Transform:
   - {fileID: 2316360505817466356}
   - {fileID: 80182246518717875}
   - {fileID: 4402598290265628984}
-  - {fileID: 4258015361010448053}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &529642188376215383
@@ -1304,7 +1304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 653711733
+  GlobalObjectIdHash: 3777304165
   InScenePlacedSourceGlobalObjectIdHash: 653711733
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1643,6 +1643,23 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   cameraTransform: {fileID: 1358507838921596165}
   playerObj: {fileID: 2316360505817466356}
+--- !u!114 &7240759505982389685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8721861722129242637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cb77fa82b279d54f95ff207b1acd130, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleAttack
+  ShowTopMostFoldoutHeaderGroup: 1
+  animator: {fileID: 7929769865290904431}
+  netAnimator: {fileID: 6575942385865845558}
+  hitbox: {fileID: 1068358094462881419}
+  attackCooldown: 0.8
 --- !u!1 &8962309484959702973
 GameObject:
   m_ObjectHideFlags: 0
@@ -1793,19 +1810,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.8969114
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.4422104
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1813,7 +1830,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -52.49
       objectReference: {fileID: 0}
     - target: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1830,6 +1847,9 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 400102, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4258015361010448053}
     - targetCorrespondingSourceObject: {fileID: 400000, guid: 417a287abb2cab94889f1f1ddd91f928, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5149726746472516489}
@@ -1876,7 +1896,7 @@ MonoBehaviour:
     Layer: 0
     OriginatingState: 2081823275
     DestinationState: 1080829965
-    TransitionDuration: 0.25
+    TransitionDuration: 0
     TriggerNameHash: 1019525540
     TransitionIndex: 4
   - IsCrossFadeExit: 0
@@ -1930,6 +1950,10 @@ MonoBehaviour:
       NameHash: 1019525540
       Synchronize: 1
       ParameterType: 9
+    - name: isAttacking
+      NameHash: 973584577
+      Synchronize: 1
+      ParameterType: 4
   AnimatorParametersExpanded: 0
 --- !u!4 &7929769865300417679 stripped
 Transform:
