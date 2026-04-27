@@ -446,6 +446,13 @@ public class AIEnemy : NetworkBehaviour
         // but ensure it's fully live
         StartCoroutine(DelayedNavMeshRebind());
     }
+    
+    public void Die()
+    {
+        ThoriEnemy health = GetComponent<ThoriEnemy>();
+        health.HandleDeath();
+        gameObject.SetActive(false);
+    }
 
     // Gives physics one frame to settle before rebinding NavMesh
     private IEnumerator DelayedNavMeshRebind()

@@ -50,15 +50,7 @@ public class ThoriEnemy : NetworkBehaviour
             HandleDeath();
     }
 
-    public void ApplyKnockback(Vector3 force)
-    {
-        if (!IsServer) return;
-
-        // Relay knockback to AIEnemy which owns the Rigidbody logic
-        ApplyKnockbackClientRpc(force);
-    }
-
-    private void HandleDeath()
+    public void HandleDeath()
     {
         if (isDead) return;
         isDead = true;
@@ -95,12 +87,5 @@ public class ThoriEnemy : NetworkBehaviour
     {
         if (aiEnemy != null)
             aiEnemy.Die();
-    }
-
-    [ClientRpc]
-    private void ApplyKnockbackClientRpc(Vector3 force)
-    {
-        if (aiEnemy != null)
-            aiEnemy.ApplyKnockback(force);
     }
 }
