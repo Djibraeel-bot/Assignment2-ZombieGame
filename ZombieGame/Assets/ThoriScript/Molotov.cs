@@ -69,9 +69,8 @@ public class Molotov : NetworkBehaviour
 
             foreach (Collider hit in hits)
             {
-                AIEnemy enemy = hit.GetComponent<AIEnemy>();
-                if (enemy != null)
-                    enemy.TakeDamage(fireDamage, attackerClientId); // pass it through
+                ThoriEnemy enemyHealth = hit.GetComponentInParent<ThoriEnemy>();
+                if (enemyHealth != null) enemyHealth.TakeDamage(fireDamage); // pass it through
             }
 
             elapsed += fireTickRate;

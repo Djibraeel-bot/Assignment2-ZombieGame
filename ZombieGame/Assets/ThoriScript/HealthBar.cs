@@ -10,6 +10,16 @@ public class HealthBar: MonoBehaviour
     public float maxHealth = 100f;
     public float health;
     private float lerpSpeed = 0.05f;
+    
+    public void Initialize(float max)
+    {
+        maxHealth = max;
+        health = max;
+        healthSlider.maxValue = max;
+        easeHealthSlider.maxValue = max;
+        healthSlider.value = max;
+        easeHealthSlider.value = max;
+    }
 
     void Start()
     {

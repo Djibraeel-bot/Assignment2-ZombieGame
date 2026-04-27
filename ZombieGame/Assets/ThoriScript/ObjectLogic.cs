@@ -32,28 +32,47 @@ public class ObjectLogic : NetworkBehaviour
     public float throwUpwardForce = 5f;
 
     private bool readyToThrow = true;
+    
+    private InputSystem_Actions inputActions;
+
+    private void Awake()
+    {
+        inputActions = new InputSystem_Actions();
+    }
 
     private void Start()
     {
         UpdateUI();
     }
-
-    private void Update()
+    
+    private void OnEnable()
     {
-        HandleSelection();
+        inputActions.Player.Enable();
 
-        if (Input.GetKeyDown(KeyCode.L) && readyToThrow)
-        {
-            Throw();
-        }
+        inputActions.Player.Throw.performed += OnThrow;
+
+        inputActions.Player.Select1.performed += ctx => SelectThrowable(0);
+        inputActions.Player.Select2.performed += ctx => SelectThrowable(1);
+        inputActions.Player.Select3.performed += ctx => SelectThrowable(2);
+        inputActions.Player.Select4.performed += ctx => SelectThrowable(3);
     }
 
-    void HandleSelection()
+    private void OnDisable()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SelectThrowable(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SelectThrowable(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SelectThrowable(2);
-        if (Input.GetKeyDown(KeyCode.Alpha4)) SelectThrowable(3);
+        inputActions.Player.Throw.performed -= OnThrow;
+
+        inputActions.Player.Select1.performed -= ctx => SelectThrowable(0);
+        inputActions.Player.Select2.performed -= ctx => SelectThrowable(1);
+        inputActions.Player.Select3.performed -= ctx => SelectThrowable(2);
+        inputActions.Player.Select4.performed -= ctx => SelectThrowable(3);
+
+        inputActions.Player.Disable();
+    }
+    
+    private void OnThrow(InputAction.CallbackContext context)
+    {
+        if (!readyToThrow) return;
+        Throw();
     }
 
     void SelectThrowable(int index)
