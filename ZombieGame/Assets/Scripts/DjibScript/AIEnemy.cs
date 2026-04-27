@@ -5,6 +5,9 @@ using Unity.Netcode;
 
 public class AIEnemy : NetworkBehaviour
 {
+    public float health = 100f;
+    public HealthBar healthBar;
+    
     public enum EnemyState { Patrol, Chase, Attack, Dead }
 
 
@@ -76,6 +79,9 @@ public class AIEnemy : NetworkBehaviour
 
     void Start()
     {
+        if (healthBar != null)
+               healthBar.health = health;
+        
         if (!NetworkManager.Singleton || !NetworkManager.Singleton.IsListening)
         {
             currentState = EnemyState.Patrol;
@@ -295,6 +301,19 @@ public class AIEnemy : NetworkBehaviour
 
     UpdateAnimations(EnemyState.Attack);
     }
+    
+    public void TakeDamage(float amount)
+    {
+        health -= amount;
+
+        if (healthBar != null)
+            healthBar.health = health;  
+
+        if (health <= 0f)
+        {
+            Die();
+        }
+    }
 
 
     // ========================
@@ -432,6 +451,12 @@ public class AIEnemy : NetworkBehaviour
             groundCheckDistance,
             groundLayer
         );
+    }
+    
+    public void Die()
+    {
+        UpdateFallingAnimation();
+        gameObject.SetActive(false);
     }
 
 
