@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 
 public class NewPlayerMovement : NetworkBehaviour
 {
@@ -86,6 +87,8 @@ public class NewPlayerMovement : NetworkBehaviour
     Rigidbody rb;
 
     public MovementState state;
+
+    [SerializeField] private Animator netAnimator;
     public enum MovementState
     {
         freeze,
@@ -162,6 +165,7 @@ public class NewPlayerMovement : NetworkBehaviour
         controls.Enable();
 
         rb = GetComponent<Rigidbody>();
+        //netAnimator = GetComponent<NetworkAnimator>();
         rb.freezeRotation = true;
 
         readyToJump = true;
@@ -177,6 +181,7 @@ public class NewPlayerMovement : NetworkBehaviour
 
         controls.Disable();
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -194,6 +199,13 @@ public class NewPlayerMovement : NetworkBehaviour
             rb.linearDamping = groundDrag;
         else
             rb.linearDamping = 0;
+
+        //if (moveInput.x > 0)
+        //{
+
+        //    netAnimator.SetInteger("animState", 1);
+        //}
+        UpdateAnimator();
     }
 
     private void FixedUpdate()
@@ -546,5 +558,12 @@ public class NewPlayerMovement : NetworkBehaviour
         Vector3 velocityXZ = displacementXZ / (Mathf.Sqrt(-2 * trajectoryHeight / gravity) + Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity));
 
         return velocityXZ + velocityY;
+    }
+
+    private void UpdateAnimator()
+    {
+        if (!IsOwner) return;
+
+        netAnimator.SetInteger("animState", (int)state);
     }
 }
