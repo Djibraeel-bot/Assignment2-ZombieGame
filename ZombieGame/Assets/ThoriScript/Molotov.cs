@@ -41,7 +41,7 @@ public class Molotov : NetworkBehaviour
         HideBottleClientRpc();
 
         // Start server-side burn loop
-        StartCoroutine(BurnArea(impactPoint));
+        StartCoroutine(BurnArea(impactPoint, OwnerClientId));
     }
 
     IEnumerator DestroyAfterDelay(NetworkObject obj, float delay)
@@ -59,7 +59,7 @@ public class Molotov : NetworkBehaviour
         if (col != null) col.enabled = false;
     }
 
-    IEnumerator BurnArea(Vector3 fireOrigin)
+    IEnumerator BurnArea(Vector3 fireOrigin, ulong attackerClientId)
     {
         float elapsed = 0f;
 
@@ -69,23 +69,16 @@ public class Molotov : NetworkBehaviour
 
             foreach (Collider hit in hits)
             {
-                // Damage AI enemies (server-side is fine, AI lives on server)
                 AIEnemy enemy = hit.GetComponent<AIEnemy>();
                 if (enemy != null)
-                    enemy.TakeDamage(fireDamage);
-
-                // Damage players via their NetworkObject owner
-                PlayerHealth playerHealth = hit.GetComponentInParent<PlayerHealth>();
-                if (playerHealth != null)
-                    playerHealth.TakeDamage(fireDamage);
+                    enemy.TakeDamage(fireDamage, attackerClientId); // pass it through
             }
 
             elapsed += fireTickRate;
             yield return new WaitForSeconds(fireTickRate);
         }
 
-        // Clean up the bottle object itself
-        if (IsServer) GetComponent<NetworkObject>().Despawn();
+        GetComponent<NetworkObject>().Despawn();
     }
 
     void OnDrawGizmosSelected()

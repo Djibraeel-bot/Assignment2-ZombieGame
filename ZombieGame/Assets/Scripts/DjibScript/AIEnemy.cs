@@ -5,8 +5,19 @@ using Unity.Netcode;
 
 public class AIEnemy : NetworkBehaviour
 {
-    public float health = 100f;
+    [Header("Health")]
+    public float maxHealth = 100f;
     public HealthBar healthBar;
+
+    [Header("Points")]
+    public int pointsOnKill = 100;
+    
+    private NetworkVariable<float> netHealth = new NetworkVariable<float>(
+        100f,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    ); 
+    
     
     public enum EnemyState { Patrol, Chase, Attack, Dead }
 
@@ -43,9 +54,7 @@ public class AIEnemy : NetworkBehaviour
 
 
     private bool isGrounded;
-
-
-
+    private bool isDead = false;
 
     [Header("References")]
     public NavMeshAgent agent;
@@ -74,19 +83,38 @@ public class AIEnemy : NetworkBehaviour
             netState.Value = currentState;
             Debug.Log("[AI] Spawned → PATROL");
         }
+        
+        netHealth.OnValueChanged += OnHealthChanged;
+
+        netHealth.OnValueChanged += OnHealthChanged;
+
+        if (IsServer)
+        {
+            netHealth.Value = maxHealth;
+            isDead = false;
+        }
+        
+        if (healthBar != null)
+            healthBar.health = netHealth.Value;
     }
 
+    public override void OnNetworkDespawn()
+    {
+        netHealth.OnValueChanged -= OnHealthChanged;
+    }
+    
+    private void OnHealthChanged(float previous, float current)
+    {
+        if (healthBar != null)
+            healthBar.health = current;
+    }
 
     void Start()
     {
-        if (healthBar != null)
-               healthBar.health = health;
-        
         if (!NetworkManager.Singleton || !NetworkManager.Singleton.IsListening)
         {
             currentState = EnemyState.Patrol;
         }
-
 
         // NAV FIXES (important for overshoot)
         agent.stoppingDistance = attackRange - stoppingDistanceBuffer;
@@ -302,16 +330,16 @@ public class AIEnemy : NetworkBehaviour
     UpdateAnimations(EnemyState.Attack);
     }
     
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, ulong attackerClientId = 0)
     {
-        health -= amount;
+        if (!IsServer || isDead) return;
 
-        if (healthBar != null)
-            healthBar.health = health;  
+        netHealth.Value = Mathf.Clamp(netHealth.Value - amount, 0f, maxHealth);
 
-        if (health <= 0f)
+        if (netHealth.Value <= 0f)
         {
-            Die();
+            isDead = true;
+            Die(attackerClientId);
         }
     }
 
@@ -453,19 +481,70 @@ public class AIEnemy : NetworkBehaviour
         );
     }
     
-    public void Die()
+    private void Die(ulong killerClientId)
     {
-        UpdateFallingAnimation();
-        gameObject.SetActive(false);
+        isDead = true;
+
+        // Award points to the killer
+        AwardPointsClientRpc(pointsOnKill, new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new[] { killerClientId }
+            }
+        });
+        
+        TriggerDeathAnimationClientRpc();
+        
+        Invoke(nameof(ReturnToPool), 1.5f);
+    }
+
+    private void ReturnToPool()
+    {
+        if (!IsServer) return;
+
+        WaveManager waveManager = FindObjectOfType<WaveManager>();
+        NetworkObject netObj = GetComponent<NetworkObject>();
+
+        if (waveManager != null && netObj != null)
+        {
+            //waveManager.ReturnEnemyToPool(netObj);
+        }
+        else
+        {
+            netObj?.Despawn();
+        }
+    }
+    
+    [ClientRpc]
+    private void TriggerDeathAnimationClientRpc()
+    {
+        if (animator != null)
+        {
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isAttacking", false);
+            animator.SetTrigger("isDead"); // add this trigger to your animator
+        }
+    }
+
+    [ClientRpc]
+    private void AwardPointsClientRpc(int amount, ClientRpcParams rpcParams = default)
+    {
+        PlayerPoints.LocalInstance?.AddPoints(amount);
+    }
+
+    private void DespawnEnemy()
+    {
+        if (IsServer)
+            GetComponent<NetworkObject>().Despawn();
     }
 
 
     void UpdateFallingAnimation()
     {
         animator.SetBool("isFalling", !isGrounded);
-
-
-        // Override other animations while airborne
+        
         if (!isGrounded)
         {
             animator.SetBool("isWalking", false);
