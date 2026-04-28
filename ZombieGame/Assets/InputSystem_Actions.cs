@@ -228,7 +228,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Select 3"",
+                    ""name"": ""Heal"",
                     ""type"": ""Button"",
                     ""id"": ""6aa45a6e-e731-4334-a1e3-941e4638f875"",
                     ""expectedControlType"": """",
@@ -237,7 +237,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Select 4"",
+                    ""name"": ""Damage"",
                     ""type"": ""Button"",
                     ""id"": ""162a6630-49ef-4d42-b3db-440b7c4ec802"",
                     ""expectedControlType"": """",
@@ -771,7 +771,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Select 3"",
+                    ""action"": ""Heal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -782,7 +782,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Select 3"",
+                    ""action"": ""Heal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -793,7 +793,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Select 4"",
+                    ""action"": ""Damage"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -804,7 +804,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Select 4"",
+                    ""action"": ""Damage"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1407,8 +1407,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Select1 = m_Player.FindAction("Select 1", throwIfNotFound: true);
         m_Player_Select2 = m_Player.FindAction("Select 2", throwIfNotFound: true);
-        m_Player_Select3 = m_Player.FindAction("Select 3", throwIfNotFound: true);
-        m_Player_Select4 = m_Player.FindAction("Select 4", throwIfNotFound: true);
+        m_Player_Heal = m_Player.FindAction("Heal", throwIfNotFound: true);
+        m_Player_Damage = m_Player.FindAction("Damage", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1517,8 +1517,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Select1;
     private readonly InputAction m_Player_Select2;
-    private readonly InputAction m_Player_Select3;
-    private readonly InputAction m_Player_Select4;
+    private readonly InputAction m_Player_Heal;
+    private readonly InputAction m_Player_Damage;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1591,13 +1591,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Select2 => m_Wrapper.m_Player_Select2;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Select3".
+        /// Provides access to the underlying input action "Player/Heal".
         /// </summary>
-        public InputAction @Select3 => m_Wrapper.m_Player_Select3;
+        public InputAction @Heal => m_Wrapper.m_Player_Heal;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Select4".
+        /// Provides access to the underlying input action "Player/Damage".
         /// </summary>
-        public InputAction @Select4 => m_Wrapper.m_Player_Select4;
+        public InputAction @Damage => m_Wrapper.m_Player_Damage;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1669,12 +1669,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Select2.started += instance.OnSelect2;
             @Select2.performed += instance.OnSelect2;
             @Select2.canceled += instance.OnSelect2;
-            @Select3.started += instance.OnSelect3;
-            @Select3.performed += instance.OnSelect3;
-            @Select3.canceled += instance.OnSelect3;
-            @Select4.started += instance.OnSelect4;
-            @Select4.performed += instance.OnSelect4;
-            @Select4.canceled += instance.OnSelect4;
+            @Heal.started += instance.OnHeal;
+            @Heal.performed += instance.OnHeal;
+            @Heal.canceled += instance.OnHeal;
+            @Damage.started += instance.OnDamage;
+            @Damage.performed += instance.OnDamage;
+            @Damage.canceled += instance.OnDamage;
         }
 
         /// <summary>
@@ -1731,12 +1731,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Select2.started -= instance.OnSelect2;
             @Select2.performed -= instance.OnSelect2;
             @Select2.canceled -= instance.OnSelect2;
-            @Select3.started -= instance.OnSelect3;
-            @Select3.performed -= instance.OnSelect3;
-            @Select3.canceled -= instance.OnSelect3;
-            @Select4.started -= instance.OnSelect4;
-            @Select4.performed -= instance.OnSelect4;
-            @Select4.canceled -= instance.OnSelect4;
+            @Heal.started -= instance.OnHeal;
+            @Heal.performed -= instance.OnHeal;
+            @Heal.canceled -= instance.OnHeal;
+            @Damage.started -= instance.OnDamage;
+            @Damage.performed -= instance.OnDamage;
+            @Damage.canceled -= instance.OnDamage;
         }
 
         /// <summary>
@@ -2143,19 +2143,19 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSelect2(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Select 3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Heal" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSelect3(InputAction.CallbackContext context);
+        void OnHeal(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Select 4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Damage" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSelect4(InputAction.CallbackContext context);
+        void OnDamage(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

@@ -53,8 +53,6 @@ public class ObjectLogic : NetworkBehaviour
 
         inputActions.Player.Select1.performed += ctx => SelectThrowable(0);
         inputActions.Player.Select2.performed += ctx => SelectThrowable(1);
-        inputActions.Player.Select3.performed += ctx => SelectThrowable(2);
-        inputActions.Player.Select4.performed += ctx => SelectThrowable(3);
     }
 
     private void OnDisable()
@@ -63,8 +61,6 @@ public class ObjectLogic : NetworkBehaviour
 
         inputActions.Player.Select1.performed -= ctx => SelectThrowable(0);
         inputActions.Player.Select2.performed -= ctx => SelectThrowable(1);
-        inputActions.Player.Select3.performed -= ctx => SelectThrowable(2);
-        inputActions.Player.Select4.performed -= ctx => SelectThrowable(3);
 
         inputActions.Player.Disable();
     }

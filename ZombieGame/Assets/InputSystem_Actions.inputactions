@@ -142,7 +142,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Select 3",
+                    "name": "Heal",
                     "type": "Button",
                     "id": "6aa45a6e-e731-4334-a1e3-941e4638f875",
                     "expectedControlType": "",
@@ -151,7 +151,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Select 4",
+                    "name": "Damage",
                     "type": "Button",
                     "id": "162a6630-49ef-4d42-b3db-440b7c4ec802",
                     "expectedControlType": "",
@@ -685,7 +685,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Select 3",
+                    "action": "Heal",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -696,7 +696,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Select 3",
+                    "action": "Heal",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -707,7 +707,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Select 4",
+                    "action": "Damage",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -718,7 +718,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Select 4",
+                    "action": "Damage",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

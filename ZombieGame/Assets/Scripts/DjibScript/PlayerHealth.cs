@@ -2,14 +2,14 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
+using Unity.Netcode;
+using UnityEngine.InputSystem;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : NetworkBehaviour
 {
    [Header("Health")]
     public float maxHealth = 100f;
-    private float currentHealth;
-    public float testDamageAmount = 10f;
-    public float healthPercent;
+    public NetworkVariable<float> currentHealth = new NetworkVariable<float>();
 
     [Header("UI")]
     public Image healthBarFill;
@@ -17,13 +17,18 @@ public class PlayerHealth : MonoBehaviour
     public TMP_Text respawnText;
 
     [Header("Damage Overlay")]
-public Image bloodOverlay;
-[Range(0f, 1f)] public float maxAlpha = 0.8f; // how intense the blood gets
+    public Image bloodOverlay;
+
+    [Header("Input")]
+    public InputActionReference damageAction;
+    public InputActionReference healAction;
+
+    [Range(0f, 1f)]
+    public float maxAlpha = 0.8f;
 
     [Header("Respawn")]
     public float respawnDelay = 3f;
-    public GameObject playerPrefab;
-    public Transform respawnPoint;
+    public Transform[] spawnPoints;
 
     [Header("Invincibility")]
     public float invincibilityDuration = 2f;
@@ -35,155 +40,270 @@ public Image bloodOverlay;
 
     private bool isDead = false;
 
-    void Start()
+    // =========================
+    // INIT
+    // =========================
+    public override void OnNetworkSpawn()
     {
-        currentHealth = maxHealth;
-        UpdateUI();
+        if (IsServer)
+        {
+            currentHealth.Value = maxHealth;
+        }
 
-        if (deathCamera != null)
-            deathCamera.gameObject.SetActive(false);
+        currentHealth.OnValueChanged += OnHealthChanged;
 
-        if (respawnText != null)
-            respawnText.gameObject.SetActive(false);
+        SetupLocalPlayer();
+        SetupInput();
 
-        // Give spawn protection on first spawn
+        UpdateUI(currentHealth.Value);
         StartCoroutine(InvincibilityRoutine());
     }
 
+    void SetupLocalPlayer()
+    {
+        if (!IsOwner) return;
+    }
+
+    void SetupInput()
+    {
+        if (!IsOwner) return;
+
+        if (damageAction != null)
+        {
+            damageAction.action.Enable();
+            damageAction.action.performed += OnDamagePressed;
+        }
+
+        if (healAction != null)
+        {
+            healAction.action.Enable();
+            healAction.action.performed += OnHealPressed;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (!IsOwner) return;
+
+        if (damageAction != null)
+            damageAction.action.performed -= OnDamagePressed;
+
+        if (healAction != null)
+            healAction.action.performed -= OnHealPressed;
+    }
+
+    // =========================
+    // INPUT HANDLERS
+    // =========================
+    void OnDamagePressed(InputAction.CallbackContext ctx)
+    {
+        if (!IsOwner || isDead) return;
+        DealDamageServerRpc(10f);
+    }
+
+    void OnHealPressed(InputAction.CallbackContext ctx)
+    {
+        if (!IsOwner || isDead) return;
+        HealServerRpc(15f);
+    }
+
+    // =========================
+    // SERVER RPCs
+    // =========================
+    [ServerRpc]
+    void DealDamageServerRpc(float amount)
+    {
+        TakeDamage(amount);
+    }
+
+    [ServerRpc]
+    void HealServerRpc(float amount)
+    {
+        Heal(amount);
+    }
+
+    // =========================
+    // DAMAGE / HEAL
+    // =========================
     public void TakeDamage(float amount)
     {
+        if (!IsServer) return;
         if (isDead || isInvincible) return;
 
-        currentHealth -= amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        currentHealth.Value -= amount;
+        currentHealth.Value = Mathf.Clamp(currentHealth.Value, 0, maxHealth);
 
-        Debug.Log("Player took damage: " + amount +
-                  " | Current Health: " + currentHealth);
-
-        UpdateUI();
-
-        if (currentHealth <= 0)
+        if (currentHealth.Value <= 0)
         {
             Die();
         }
     }
 
-void Update()
-{
-    // Press F to take damage (for testing)
-    if (Input.GetKeyDown(KeyCode.F))
+    public void Heal(float amount)
     {
-        TakeDamage(testDamageAmount);
+        if (!IsServer) return;
+        if (isDead) return;
+
+        currentHealth.Value += amount;
+        currentHealth.Value = Mathf.Clamp(currentHealth.Value, 0, maxHealth);
+
+        Debug.Log("💚 Player healed: " + amount);
     }
-}
-    void UpdateUI()
+
+    // =========================
+    // HEALTH SYNC
+    // =========================
+    void OnHealthChanged(float oldValue, float newValue)
     {
+        UpdateUI(newValue);
+    }
+
+    void UpdateUI(float health)
+    {
+        if (!IsOwner) return;
+
+        float percent = health / maxHealth;
+
         if (healthBarFill != null)
-            healthBarFill.fillAmount = currentHealth / maxHealth;
+            healthBarFill.fillAmount = percent;
 
         if (healthText != null)
+            healthText.text = Mathf.RoundToInt(percent * 100f) + "%";
+
+        if (bloodOverlay != null)
         {
-            healthPercent = (currentHealth / maxHealth) * 100f;
-            healthText.text = Mathf.RoundToInt(healthPercent) + "%";
+            float targetAlpha = (1f - percent) * maxAlpha;
+            Color c = bloodOverlay.color;
+            c.a = targetAlpha;
+            bloodOverlay.color = c;
         }
-
-            // Blood overlay
-    if (bloodOverlay != null)
-    {
-        float healthPercent = currentHealth / maxHealth;
-
-        // Invert it: low health = high alpha
-        float targetAlpha = (1f - healthPercent) * maxAlpha;
-
-        Color color = bloodOverlay.color;
-        color.a = targetAlpha;
-        bloodOverlay.color = color;
-    }
     }
 
+    // =========================
+    // DEATH
+    // =========================
     void Die()
     {
         if (isDead) return;
         isDead = true;
 
-        Debug.Log("💀 PLAYER DIED");
+        DisablePlayerServer();
+        HandleDeathClientRpc();
 
-        // Switch cameras
+        StartCoroutine(RespawnRoutine());
+    }
+
+    void DisablePlayerServer()
+    {
+        // Disable movement/combat scripts here
+        // Example:
+        // GetComponent<PlayerMovement>().enabled = false;
+    }
+
+    [ClientRpc]
+    void HandleDeathClientRpc()
+    {
+        if (!IsOwner) return;
+
         if (playerCamera != null)
             playerCamera.gameObject.SetActive(false);
 
         if (deathCamera != null)
             deathCamera.gameObject.SetActive(true);
-
-        DisablePlayer();
-
-        StartCoroutine(RespawnRoutine());
     }
 
-
-    void DisablePlayer()
-    {
-        // Disable movement/combat scripts here if needed
-        // Example:
-        // GetComponent<PlayerMovement>().enabled = false;
-    }
-
+    // =========================
+    // RESPAWN
+    // =========================
     IEnumerator RespawnRoutine()
     {
         float timer = respawnDelay;
 
-        if (respawnText != null)
-            respawnText.gameObject.SetActive(true);
+        ShowRespawnUIClientRpc(true);
 
         while (timer > 0)
         {
-            if (respawnText != null)
-                respawnText.text = "Respawning in: " + Mathf.Ceil(timer);
-
+            UpdateRespawnTimerClientRpc(Mathf.Ceil(timer));
             yield return new WaitForSeconds(1f);
             timer--;
         }
 
-        if (respawnText != null)
-            respawnText.gameObject.SetActive(false);
-
-        // Spawn new player
-        GameObject newPlayer = Instantiate(playerPrefab, respawnPoint.position, respawnPoint.rotation);
-
-        // Enable new player camera
-        Camera newCam = newPlayer.GetComponentInChildren<Camera>();
-        if (newCam != null)
-            newCam.gameObject.SetActive(true);
-
-        // Disable death camera
-        if (deathCamera != null)
-            deathCamera.gameObject.SetActive(false);
-
-        Destroy(gameObject);
+        ShowRespawnUIClientRpc(false);
+        RespawnPlayer();
     }
 
+    void RespawnPlayer()
+    {
+        isDead = false;
+        currentHealth.Value = maxHealth;
+
+        Transform spawn = GetSpawnPoint();
+        transform.position = spawn.position;
+        transform.rotation = spawn.rotation;
+
+        EnablePlayerServer();
+        HandleRespawnClientRpc();
+
+        StartCoroutine(InvincibilityRoutine());
+    }
+
+    void EnablePlayerServer()
+    {
+        // Re-enable movement/combat scripts
+        // Example:
+        // GetComponent<PlayerMovement>().enabled = true;
+    }
+
+    Transform GetSpawnPoint()
+    {
+        if (spawnPoints != null && spawnPoints.Length > 0)
+        {
+            return spawnPoints[Random.Range(0, spawnPoints.Length)];
+        }
+
+        return transform;
+    }
+
+    // =========================
+    // CLIENT UI RPCs
+    // =========================
+    [ClientRpc]
+    void ShowRespawnUIClientRpc(bool show)
+    {
+        if (!IsOwner) return;
+
+        if (respawnText != null)
+            respawnText.gameObject.SetActive(show);
+    }
+
+    [ClientRpc]
+    void UpdateRespawnTimerClientRpc(float time)
+    {
+        if (!IsOwner) return;
+
+        if (respawnText != null)
+            respawnText.text = "Respawning in: " + time;
+    }
+
+    [ClientRpc]
+    void HandleRespawnClientRpc()
+    {
+        if (!IsOwner) return;
+
+        if (playerCamera != null)
+            playerCamera.gameObject.SetActive(true);
+
+        if (deathCamera != null)
+            deathCamera.gameObject.SetActive(false);
+    }
+
+    // =========================
+    // INVINCIBILITY
+    // =========================
     IEnumerator InvincibilityRoutine()
     {
         isInvincible = true;
-
-        Debug.Log("🛡️ Player is INVINCIBLE");
-
         yield return new WaitForSeconds(invincibilityDuration);
-
         isInvincible = false;
-
-        Debug.Log("❌ Invincibility ended");
-    }
-    
-    public void Heal(float amount)
-    {
-        if (isDead) return;
-
-        currentHealth += amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
-        Debug.Log("💚 Player healed: " + amount + " | Current Health: " + currentHealth);
-
-        UpdateUI();
     }
 }
