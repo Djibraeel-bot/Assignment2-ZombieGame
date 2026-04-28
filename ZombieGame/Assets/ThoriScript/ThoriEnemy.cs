@@ -19,12 +19,12 @@ public class ThoriEnemy : NetworkBehaviour
     [SerializeField] private Animator locAnimator;
     [SerializeField] private Unity.Netcode.Components.NetworkAnimator netAnimator;
 
-    [SerializeField] private float staggerCooldown = 0.5f;
-    private float lastStaggerTime;
+    //[SerializeField] private float staggerCooldown = 0.5f;
+    //private float lastStaggerTime;
 
     private void Awake()
     {
-        healthBar = GetComponent<HealthBar>();
+        healthBar = GetComponentInChildren<HealthBar>();
         aiEnemy = GetComponent<AIEnemy>();
     }
 
@@ -34,11 +34,12 @@ public class ThoriEnemy : NetworkBehaviour
             currentHealth.Value = maxHealth;
 
         currentHealth.OnValueChanged += OnHealthChanged;
-        
+
         if (healthBar != null)
             healthBar.Initialize(maxHealth);
 
-        UpdateHealthBar(currentHealth.Value);
+        if (IsServer)
+            UpdateHealthBar(maxHealth);
 
         //locAnimator = GetComponent<Animator>();
     }
@@ -53,11 +54,11 @@ public class ThoriEnemy : NetworkBehaviour
         if (IsServer)
             Debug.Log("SERVER health: " + currentHealth.Value);
 
-        if (Time.time >= lastStaggerTime + staggerCooldown)
-        {
-            lastStaggerTime = Time.time;
-            TriggerStaggerClientRpc();
-        }
+        //if (Time.time >= lastStaggerTime + staggerCooldown)
+        //{
+        //    lastStaggerTime = Time.time;
+        //    TriggerStaggerClientRpc();
+        //}
     }
 
     public void TakeDamage(float amount)
@@ -66,7 +67,7 @@ public class ThoriEnemy : NetworkBehaviour
 
         currentHealth.Value = Mathf.Clamp(currentHealth.Value - amount, 0f, maxHealth);
 
-        // 👇 Trigger stagger on all clients
+        //Trigger stagger on all clients
         TriggerStaggerClientRpc();
 
         if (currentHealth.Value <= 0f)

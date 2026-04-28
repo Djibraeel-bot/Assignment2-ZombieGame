@@ -22,7 +22,7 @@ public class Menu : MonoBehaviour
         //set connection data first
         networkManager.StartHost(); 
         // host loads game scene for host
-        networkManager.SceneManager.LoadScene("DjibScene", LoadSceneMode.Single);
+        networkManager.SceneManager.LoadScene("NGO_Setup", LoadSceneMode.Single);
     }
 
     public void JoinGame()

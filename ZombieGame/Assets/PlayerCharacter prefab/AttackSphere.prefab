@@ -52,7 +52,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2687723667186807152}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MeleeHitbox
   ShowTopMostFoldoutHeaderGroup: 1
   damage: 30
-  lifetime: 0.2
+  lifetime: 100
 --- !u!114 &558791708865301670
 MonoBehaviour:
   m_ObjectHideFlags: 0

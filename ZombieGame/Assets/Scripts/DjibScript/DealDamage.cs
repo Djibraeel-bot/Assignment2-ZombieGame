@@ -54,7 +54,7 @@ public class DealDamage : MonoBehaviour
             lastDamageTime = Time.time;
 
             if (enableDebugLogs)
-                Debug.Log($"💥 Damage Applied: {damage}");
+                Debug.Log($" Damage Applied: {damage}");
         }
     }
 }
