@@ -8,7 +8,7 @@ public class PlayerPoints : NetworkBehaviour
 
     [Header("Points")]
     private NetworkVariable<int> netPoints = new NetworkVariable<int>(
-        500,
+        0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
@@ -73,6 +73,6 @@ public class PlayerPoints : NetworkBehaviour
     private void UpdateUI(int value)
     {
         if (pointsText != null)
-            pointsText.text = value.ToString();
+            pointsText.text = "Points: " + value.ToString();
     }
 }

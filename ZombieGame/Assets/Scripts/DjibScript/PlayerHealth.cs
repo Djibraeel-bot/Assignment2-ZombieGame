@@ -62,6 +62,12 @@ public class PlayerHealth : NetworkBehaviour
     void SetupLocalPlayer()
     {
         if (!IsOwner) return;
+        
+        if (deathCamera != null)
+            deathCamera.gameObject.SetActive(false);
+
+        if (respawnText != null)
+            respawnText.gameObject.SetActive(false);
     }
 
     void SetupInput()
