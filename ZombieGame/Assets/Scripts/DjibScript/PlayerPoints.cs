@@ -1,47 +1,78 @@
 using UnityEngine;
 using TMPro;
+using Unity.Netcode;
 
-public class PlayerPoints : MonoBehaviour
+public class PlayerPoints : NetworkBehaviour
 {
-     public static PlayerPoints instance;
+    public static PlayerPoints LocalInstance { get; private set; }
 
     [Header("Points")]
-    public int points = 500; // starting points
+    private NetworkVariable<int> netPoints = new NetworkVariable<int>(
+        500,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
 
     [Header("UI")]
     public TMP_Text pointsText;
 
-    void Awake()
+    public override void OnNetworkSpawn()
     {
-        instance = this;
+        netPoints.OnValueChanged += OnPointsChanged;
+
+        if (IsLocalPlayer)
+        {
+            LocalInstance = this;
+            UpdateUI(netPoints.Value);
+        }
     }
 
-    void Start()
+    public override void OnNetworkDespawn()
     {
-        UpdateUI();
+        netPoints.OnValueChanged -= OnPointsChanged;
+
+        if (IsLocalPlayer && LocalInstance == this)
+            LocalInstance = null;
+    }
+
+    private void OnPointsChanged(int previous, int current)
+    {
+        // Only update UI for the local player
+        if (IsLocalPlayer)
+            UpdateUI(current);
     }
 
     public void AddPoints(int amount)
     {
-        points += amount;
-        UpdateUI();
+        AddPointsServerRpc(amount);
+    }
+
+    [ServerRpc(RequireOwnership = true)]
+    private void AddPointsServerRpc(int amount)
+    {
+        netPoints.Value += amount;
     }
 
     public bool SpendPoints(int amount)
     {
-        if (points >= amount)
+        if (netPoints.Value >= amount)
         {
-            points -= amount;
-            UpdateUI();
+            SpendPointsServerRpc(amount);
             return true;
         }
-
         return false;
     }
 
-    void UpdateUI()
+    [ServerRpc(RequireOwnership = true)]
+    private void SpendPointsServerRpc(int amount)
+    {
+        if (netPoints.Value >= amount)
+            netPoints.Value -= amount;
+    }
+
+    private void UpdateUI(int value)
     {
         if (pointsText != null)
-            pointsText.text = points.ToString();
+            pointsText.text = value.ToString();
     }
 }

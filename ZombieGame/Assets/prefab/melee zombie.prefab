@@ -3828,7 +3828,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4993365485260360897}
   - component: {fileID: 4165965295511170635}
-  - component: {fileID: 3145411870468582175}
   m_Layer: 0
   m_Name: Health Bar
   m_TagString: Untagged
@@ -3874,19 +3873,6 @@ MonoBehaviour:
   easeHealthSlider: {fileID: 2704720739673479053}
   maxHealth: 100
   health: 0
---- !u!114 &3145411870468582175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4815120711656081146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5082b6b4235772a40b7eadb481651a53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Billboard
-  cam: {fileID: 0}
 --- !u!1 &4871863275756719852
 GameObject:
   m_ObjectHideFlags: 0
