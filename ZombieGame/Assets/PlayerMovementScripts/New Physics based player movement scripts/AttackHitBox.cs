@@ -1,16 +1,19 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MeleeHitbox : NetworkBehaviour
 {
-    public int damage = 10;
+    public float damage = 40f;
     public float lifetime = 0.2f;
+
+    private HashSet<NetworkObject> hitTargets = new HashSet<NetworkObject>();
 
     public override void OnNetworkSpawn()
     {
         if (IsServer)
-            StartCoroutine(Life());
+            Invoke(nameof(DestroySelf), lifetime);
     }
 
     public override void OnNetworkDespawn()
@@ -22,23 +25,26 @@ public class MeleeHitbox : NetworkBehaviour
         //controls.Disable();
     }
 
-    IEnumerator Life()
+    void DestroySelf()
     {
-        yield return new WaitForSeconds(lifetime);
-        GetComponent<NetworkObject>().Despawn(); // important!
+        if (NetworkObject != null && NetworkObject.IsSpawned)
+            NetworkObject.Despawn();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (!IsServer) return; // Only server applies damage
+        if (!IsServer) return;
 
-        if (other.CompareTag("Enemy") && other.CompareTag("Player"))
-        {
-            EnemyHealth enemy = other.GetComponent<EnemyHealth>();
-            if (enemy != null)
-            {
-                //enemy.TakeDamage(damage);
-            }
-        }
+        // Try get enemy
+        ThoriEnemy enemy = other.GetComponent<ThoriEnemy>();
+
+        if (enemy == null) return;
+
+        // Prevent hitting same enemy multiple times
+        if (hitTargets.Contains(enemy.NetworkObject)) return;
+
+        hitTargets.Add(enemy.NetworkObject);
+
+        enemy.TakeDamage(damage);
     }
 }
