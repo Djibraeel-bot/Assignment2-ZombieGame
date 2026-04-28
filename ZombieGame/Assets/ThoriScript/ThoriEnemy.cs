@@ -1,4 +1,4 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 public class ThoriEnemy : NetworkBehaviour
@@ -15,6 +15,12 @@ public class ThoriEnemy : NetworkBehaviour
     [SerializeField] private HealthBar healthBar;
     private AIEnemy aiEnemy;
     private bool isDead = false;
+
+    [SerializeField] private Animator locAnimator;
+    [SerializeField] private Unity.Netcode.Components.NetworkAnimator netAnimator;
+
+    [SerializeField] private float staggerCooldown = 0.5f;
+    private float lastStaggerTime;
 
     private void Awake()
     {
@@ -33,21 +39,48 @@ public class ThoriEnemy : NetworkBehaviour
             healthBar.Initialize(maxHealth);
 
         UpdateHealthBar(currentHealth.Value);
+
+        //locAnimator = GetComponent<Animator>();
     }
 
     public override void OnNetworkDespawn()
     {
         currentHealth.OnValueChanged -= OnHealthChanged;
     }
-    
+
+    void Update()
+    {
+        if (IsServer)
+            Debug.Log("SERVER health: " + currentHealth.Value);
+
+        if (Time.time >= lastStaggerTime + staggerCooldown)
+        {
+            lastStaggerTime = Time.time;
+            TriggerStaggerClientRpc();
+        }
+    }
+
     public void TakeDamage(float amount)
     {
         if (!IsServer || isDead) return;
 
         currentHealth.Value = Mathf.Clamp(currentHealth.Value - amount, 0f, maxHealth);
 
+        // 👇 Trigger stagger on all clients
+        TriggerStaggerClientRpc();
+
         if (currentHealth.Value <= 0f)
             HandleDeath();
+    }
+
+    [ClientRpc]
+    private void TriggerStaggerClientRpc()
+    {
+        if (locAnimator != null)
+            locAnimator.SetTrigger("Stagger");
+
+        if (netAnimator != null)
+            netAnimator.SetTrigger("Stagger");
     }
 
     public void HandleDeath()
