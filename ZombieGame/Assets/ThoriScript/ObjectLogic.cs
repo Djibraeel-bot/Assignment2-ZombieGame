@@ -144,16 +144,16 @@ public class ObjectLogic : NetworkBehaviour
 
         Debug.Log("Before Add -> " + throwables[index].itemName + ": " + throwables[index].currentAmount);
 
-        throwables[index].currentAmount += amount;
         throwables[index].currentAmount = Mathf.Clamp(
             throwables[index].currentAmount,
             0,
             throwables[index].maxAmount
         );
 
-        Debug.Log("After Add -> " + throwables[index].itemName + ": " + throwables[index].currentAmount);
-
+        UpdateAmmoClientRpc(index, throwables[index].currentAmount);
         UpdateUI();
+
+        Debug.Log("After Add -> " + throwables[index].itemName + ": " + throwables[index].currentAmount);
     }
 
     void UpdateUI()

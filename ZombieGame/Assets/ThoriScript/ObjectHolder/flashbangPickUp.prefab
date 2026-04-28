@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3000607360002577087}
   - component: {fileID: 1016784350380036053}
   - component: {fileID: 5357150663787948667}
+  - component: {fileID: -5510816169675779877}
   - component: {fileID: 6889109315984051949}
   m_Layer: 0
   m_Name: flashbangPickUp
@@ -115,6 +116,31 @@ CapsuleCollider:
   m_Height: 0.41898912
   m_Direction: 1
   m_Center: {x: -0.004122874, y: 0.21463358, z: 0.00062199496}
+--- !u!114 &-5510816169675779877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3422073703905218040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 2607936114
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &6889109315984051949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,5 +153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d44e4aa7dcefa4ea52f8abb047297a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pickup
+  ShowTopMostFoldoutHeaderGroup: 1
   throwableIndex: 1
   amount: 2

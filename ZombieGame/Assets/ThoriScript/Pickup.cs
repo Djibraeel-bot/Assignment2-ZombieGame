@@ -6,50 +6,28 @@ public class Pickup : NetworkBehaviour
     public int throwableIndex;
     public int amount = 1;
 
-    private bool pickedUp = false;  // Prevents double pickup race condition
+    private bool pickedUp = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        // Only the server validates and processes pickups
         if (!IsServer || pickedUp) return;
-
-        NetworkObject playerNetObj = other.GetComponentInParent<NetworkObject>();
-        if (playerNetObj == null) return;
 
         ObjectLogic inventory = other.GetComponentInParent<ObjectLogic>();
         if (inventory == null) return;
 
-        // Only the player who owns this object can pick it up
-        if (!playerNetObj.IsPlayerObject) return;
+        NetworkObject playerNetObj = inventory.GetComponent<NetworkObject>();
+        if (playerNetObj == null || !playerNetObj.IsPlayerObject) return;
 
         pickedUp = true;
 
-        // Tell that specific client to update their inventory UI
-        GiveItemToClientRpc(throwableIndex, amount, new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = new[] { playerNetObj.OwnerClientId }
-            }
-        });
+        // Server updates the actual player's inventory directly
+        inventory.AddThrowable(throwableIndex, amount);
 
-        // Despawn the pickup from the world for all clients
+        // Despawn for everyone
         NetworkObject.Despawn();
-    }
-
-    [ClientRpc]
-    private void GiveItemToClientRpc(int index, int qty, ClientRpcParams rpcParams = default)
-    {
-        // Runs only on the target client — find their local ObjectLogic
-        foreach (NetworkObject netObj in FindObjectsOfType<NetworkObject>())
-        {
-            if (netObj.IsLocalPlayer)
-            {
-                ObjectLogic inventory = netObj.GetComponent<ObjectLogic>();
-                if (inventory != null)
-                    inventory.AddThrowable(index, qty);
-                return;
-            }
-        }
+        
+        Debug.Log("Pickup touched by: " + other.name);
+        Debug.Log("Server found inventory: " + inventory.name);
+        Debug.Log("Adding throwable index " + throwableIndex);
     }
 }

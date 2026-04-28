@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d4ab6fc4-0c14-4915-aaf5-3fb2466fd788" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ZombieGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ZombieGame/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThoriScript/EnemyHealth.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThoriScript/EnemyHealth.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThoriScript/HealthBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThoriScript/HealthBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/prefab/melee zombie working Variant.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/prefab/melee zombie working Variant.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/NGO_Minimal_Setup/NGO_Setup.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/NGO_Minimal_Setup/NGO_Setup.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThoriScript/ObjectLogic.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThoriScript/ObjectLogic.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThoriScript/Pickup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThoriScript/Pickup.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +98,7 @@
       <workItem from="1777315824848" duration="1826000" />
       <workItem from="1777319996620" duration="460000" />
       <workItem from="1777320649326" duration="2091000" />
-      <workItem from="1777375149972" duration="9368000" />
+      <workItem from="1777375149972" duration="14094000" />
     </task>
     <servers />
   </component>
