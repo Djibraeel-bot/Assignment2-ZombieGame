@@ -1,95 +1,60 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 
-public class SimpleAttack : NetworkBehaviour
+public class PlayerAttack : NetworkBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Animator animator;
-    [SerializeField] private NetworkAnimator netAnimator;
-    [SerializeField] private GameObject hitbox;
+    public GameObject hitboxPrefab;
+    public Transform attackPoint;
+    public float attackCooldown = 0.5f;
 
-    [Header("Settings")]
-    [SerializeField] private float attackCooldown = 0.8f;
+    private float lastAttackTime;
 
-    private bool canAttack = true;
-
-    [SerializeField] private CombatInput controls;
-    private NewPlayerMovement playerMove;
-
-    private void Awake()
-    {
-        //controls = new CombatInput();
-    }
+    private NewPlayerMovement playerMoveScript;
 
     public override void OnNetworkSpawn()
     {
-        if (IsOwner)
-        {
-            controls.Enable();
-            //controls.Player.Attack.performed += OnAttack;
-            playerMove = GetComponent<NewPlayerMovement>();
-        }
+        if (!IsOwner) return;
+
+        playerMoveScript = GetComponent<NewPlayerMovement>();
     }
 
     public override void OnNetworkDespawn()
     {
-        if (IsOwner)
+        base.OnNetworkDespawn();
+
+        if (!IsOwner) return;
+
+        //controls.Disable();
+    }
+
+    void Update()
+    {
+        if (!IsOwner) return;
+
+        if (playerMoveScript.AttackTriggered &&
+            Time.time >= lastAttackTime + attackCooldown)
         {
-            //controls.Player.Attack.performed -= OnAttack;
-            controls.Disable();
+            lastAttackTime = Time.time;
+
+            // ONLY play animation now
+            playerMoveScript.locAnimator.SetTrigger("Attack");
+            playerMoveScript.netAnimator.SetTrigger("Attack");
         }
     }
 
-    private void Update()
+    [ServerRpc]
+    void AttackServerRpc(Vector3 pos, Quaternion rot)
+    {
+        Debug.Log("ServerRpc called on: " + OwnerClientId);
+
+        GameObject hitbox = Instantiate(hitboxPrefab, pos, rot);
+        hitbox.GetComponent<NetworkObject>().Spawn();
+    }
+
+    public void SpawnAttackHitbox()
     {
         if (!IsOwner) return;
 
-        if (playerMove.AttackTriggered && canAttack)
-        {
-            Attack();
-        }
-    }
-
-    //private void OnAttack(InputAction.CallbackContext ctx)
-    //{
-    //    if (!IsOwner) return;
-    //    if (!canAttack) return;
-
-    //    Debug.Log("ATTACK INPUT FIRED");
-
-    //    Attack();
-    //}
-
-    private void Attack()
-    {
-        canAttack = false;
-
-        Debug.Log("ATTACK FUNCTION CALLED");
-
-        // Networked animation trigger
-        netAnimator.SetTrigger("TriggerAttack");
-
-        Invoke(nameof(ResetAttack), attackCooldown);
-    }
-
-    private void ResetAttack()
-    {
-        canAttack = true;
-    }
-
-    // ===== ANIMATION EVENTS =====
-
-    public void EnableHitbox()
-    {
-        if (!IsOwner) return;
-        hitbox.SetActive(true);
-    }
-
-    public void DisableHitbox()
-    {
-        if (!IsOwner) return;
-        hitbox.SetActive(false);
+        AttackServerRpc(attackPoint.position, attackPoint.rotation);
     }
 }

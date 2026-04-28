@@ -63,6 +63,8 @@ public class NewPlayerMovement : NetworkBehaviour
     public bool dashPressed;
     public bool grapplePressed;
 
+    public bool attackPressed;
+
     private bool attackTriggered;
     public bool AttackTriggered => attackTriggered;
 
@@ -90,8 +92,8 @@ public class NewPlayerMovement : NetworkBehaviour
 
     public MovementState state;
 
-    [SerializeField] private NetworkAnimator netAnimator;
-    [SerializeField] private Animator locAnimator;
+    [SerializeField] public NetworkAnimator netAnimator;
+    [SerializeField] public Animator locAnimator;
 
 
     private bool wasGrounded;
@@ -151,7 +153,8 @@ public class NewPlayerMovement : NetworkBehaviour
 
         controls.Player.Attack.performed += ctx =>
         {
-            attackTriggered = true;
+            Debug.Log("ATTACK INPUT FIRED");
+            attackPressed = true;
         };
     }
 
@@ -219,7 +222,16 @@ public class NewPlayerMovement : NetworkBehaviour
         //}
         UpdateAnimator();
 
-        attackTriggered = false;
+        attackTriggered = attackPressed;
+        attackPressed = false;
+
+        if (attackTriggered)
+        {
+            locAnimator.SetTrigger("TriggerAttack");
+            netAnimator.SetTrigger("TriggerAttack");
+        }
+
+        //attackTriggered = false;
     }
 
     private void FixedUpdate()
