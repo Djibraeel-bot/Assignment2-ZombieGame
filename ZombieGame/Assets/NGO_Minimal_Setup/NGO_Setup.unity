@@ -1053,6 +1053,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 7740065537955583998, guid: 74f78c4c0369f1b4ea44a693b67b3adf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7897239417580346824, guid: 74f78c4c0369f1b4ea44a693b67b3adf, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -9375,6 +9379,10 @@ PrefabInstance:
       propertyPath: NetworkConfig.PlayerPrefab
       value: 
       objectReference: {fileID: 8721861722129242637, guid: 68be3baf35e8252478e6af7265387518, type: 3}
+    - target: {fileID: 5623163541540242110, guid: 8e523edd1851c6d438f6c4886f8ec5d0, type: 3}
+      propertyPath: 'NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 51ad54d85346d4b45abeaf32f7ba7604, type: 2}
     - target: {fileID: 8817022848158524602, guid: 8e523edd1851c6d438f6c4886f8ec5d0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
