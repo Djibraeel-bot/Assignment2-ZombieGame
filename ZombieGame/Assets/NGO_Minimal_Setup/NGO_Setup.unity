@@ -1130,6 +1130,82 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74f78c4c0369f1b4ea44a693b67b3adf, type: 3}
+--- !u!1001 &109938761
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5963066479982879636, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 552745617
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.3654573
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.3654573
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3654573
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.7319
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.74
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -20.671312
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068431951848980288, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7310556171007902142, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      propertyPath: m_Name
+      value: melee zombie working Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7310556171007902142, guid: e729d235ad14cb840a925193976ae007, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1173917708}
+  m_SourcePrefab: {fileID: 100100000, guid: e729d235ad14cb840a925193976ae007, type: 3}
 --- !u!43 &150688259
 Mesh:
   m_ObjectHideFlags: 0
@@ -5149,6 +5225,29 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &1173917697 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7310556171007902142, guid: e729d235ad14cb840a925193976ae007, type: 3}
+  m_PrefabInstance: {fileID: 109938761}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1173917708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173917697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 930854d00abe7284a8fcf71b8441679f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThoriEnemy
+  ShowTopMostFoldoutHeaderGroup: 1
+  maxHealth: 100
+  healthBar: {fileID: 0}
+  locAnimator: {fileID: 1655864299}
+  netAnimator: {fileID: 1655864300}
+  staggerCooldown: 0.5
 --- !u!43 &1176046922
 Mesh:
   m_ObjectHideFlags: 0
@@ -6217,6 +6316,22 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!95 &1655864299 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 517422053543943579, guid: e729d235ad14cb840a925193976ae007, type: 3}
+  m_PrefabInstance: {fileID: 109938761}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1655864300 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3632233055588401595, guid: e729d235ad14cb840a925193976ae007, type: 3}
+  m_PrefabInstance: {fileID: 109938761}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
 --- !u!43 &1693328403
 Mesh:
   m_ObjectHideFlags: 0
@@ -9467,3 +9582,4 @@ SceneRoots:
   - {fileID: 1169350593}
   - {fileID: 853730810}
   - {fileID: 1585259852}
+  - {fileID: 109938761}
