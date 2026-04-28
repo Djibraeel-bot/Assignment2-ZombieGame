@@ -18,7 +18,7 @@ public class ThoriEnemy : NetworkBehaviour
 
     private void Awake()
     {
-        healthBar = GetComponent<HealthBar>();
+        healthBar = GetComponentInChildren<HealthBar>();
         aiEnemy = GetComponent<AIEnemy>();
     }
 
@@ -28,11 +28,12 @@ public class ThoriEnemy : NetworkBehaviour
             currentHealth.Value = maxHealth;
 
         currentHealth.OnValueChanged += OnHealthChanged;
-        
+
         if (healthBar != null)
             healthBar.Initialize(maxHealth);
-
-        UpdateHealthBar(currentHealth.Value);
+        
+        if (IsServer)
+            UpdateHealthBar(maxHealth);
     }
 
     public override void OnNetworkDespawn()

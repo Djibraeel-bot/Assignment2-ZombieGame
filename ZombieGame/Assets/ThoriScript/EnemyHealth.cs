@@ -34,8 +34,7 @@ public class EnemyHealth: MonoBehaviour
     void AttackPlayer()
     {
         if (playerHealthBar != null)
-        {
-            playerHealthBar.TakeDamage(damageAmount);   // ✅ Deal damage to player
+        { 
             ApplyKnockbackToPlayer();
         }
     }

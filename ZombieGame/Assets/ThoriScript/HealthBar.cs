@@ -10,7 +10,8 @@ public class HealthBar: MonoBehaviour
     public float maxHealth = 100f;
     public float health;
     private float lerpSpeed = 0.05f;
-    
+    private bool initialized = false;  // Guard against Start() overwriting
+
     public void Initialize(float max)
     {
         maxHealth = max;
@@ -19,13 +20,20 @@ public class HealthBar: MonoBehaviour
         easeHealthSlider.maxValue = max;
         healthSlider.value = max;
         easeHealthSlider.value = max;
+        initialized = true;
     }
 
     void Start()
     {
-        health = maxHealth;
-        healthSlider.maxValue = maxHealth;
-        easeHealthSlider.maxValue = maxHealth;
+        // Only self-initialize if ThoriEnemy hasn't already done it
+        if (!initialized)
+        {
+            health = maxHealth;
+            healthSlider.maxValue = maxHealth;
+            easeHealthSlider.maxValue = maxHealth;
+            healthSlider.value = maxHealth;
+            easeHealthSlider.value = maxHealth;
+        }
     }
 
     void Update()
@@ -35,21 +43,5 @@ public class HealthBar: MonoBehaviour
 
         if (healthSlider.value != easeHealthSlider.value)
             easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, health, lerpSpeed);
-    }
-
-    public void TakeDamage(float damage)   // ✅ Now public
-    {
-        health = Mathf.Max(health - damage, 0f);  // ✅ Clamps at 0, no negative health
-
-        if (health <= 0f)
-        {
-            PlayerDie();
-        }
-    }
-
-    void PlayerDie()
-    {
-        Debug.Log("Player is dead!");
-        // Add your game over / respawn logic here
     }
 }
